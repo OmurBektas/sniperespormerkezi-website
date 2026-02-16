@@ -67,8 +67,11 @@
         nav.desktop-nav a:hover::after { width: 100%; }
 
         .header-right { display: flex; align-items: center; gap: 30px; z-index: 1002;}
-        .lang-switch { cursor: pointer; font-family: var(--font-body); font-weight: 700; color: #888; }
+        
+        /* Dil Seçici Stili (Hem Mobil Hem Desktop İçin) */
+        .lang-switch { cursor: pointer; font-family: var(--font-body); font-weight: 700; color: #888; transition: 0.3s; }
         .lang-switch span.active { color: #fff; border-bottom: 1px solid var(--neon-red); }
+        .lang-switch:hover { color: #fff; }
 
         /* MOBİL MENÜ İKONU VE YAPISI */
         .hamburger { display: none; font-size: 1.8rem; color: #fff; cursor: pointer; z-index: 1002; }
@@ -382,6 +385,11 @@
         <a href="#tournaments" class="mobile-link" data-tr="TURNUVALAR" data-en="TOURNAMENTS">TURNUVALAR</a>
         <a href="#gallery" class="mobile-link" data-tr="GALERİ" data-en="GALLERY">GALERİ</a>
         <a href="#contact" class="mobile-link" data-tr="İLETİŞİM & KONUM" data-en="CONTACT & LOCATION">İLETİŞİM & KONUM</a>
+        
+        <div class="lang-switch" id="mobile-lang-toggle" style="font-size: 1.2rem; margin-top: 10px;">
+            <span class="active">TR</span> | <span>EN</span>
+        </div>
+
         <a href="#contact" class="mobile-link" style="color:var(--neon-red); margin-top:20px;" data-tr="REZERVASYON YAP" data-en="BOOK NOW">REZERVASYON YAP</a>
     </div>
 
@@ -395,7 +403,7 @@
         <h1 class="hero-title">SNIPER<br><span>ESPOR MERKEZİ</span></h1>
         <div class="hero-desc">
             <p data-tr="İstanbul Anadoluda, en yeni donanımlarla donatılmış profesyonel E-spor deneyimi. Fiber internet ve RTX serisi sistemler ile sınırları zorla." 
-               data-en="Experience professional esports in the heart of Istanbul, equipped with the latest hardware. Push the limits with fiber internet and RTX series systems.">
+               data-en="Experience Professional E-sports in the heart of Istanbul, equipped with the latest hardware. Push the limits with fiber internet and RTX series systems.">
                İstanbul Anadoluda, en yeni donanımlarla donatılmış profesyonel E-spor deneyimi. Fiber internet ve RTX serisi sistemler ile sınırları zorla.
             </p>
         </div>
@@ -444,7 +452,7 @@
                     <li><i class="fa-solid fa-check"></i> <span data-tr="ASUS 1050TI Ekran Kartı" data-en="ASUS 1050TI Graphics">ASUS 1050TI Ekran Kartı</span></li>
                     <li><i class="fa-solid fa-check"></i> <span data-tr="144Hz Monitör" data-en="144Hz Monitor">144Hz Monitör</span></li>
                     <li><i class="fa-solid fa-check"></i> <span data-tr="Mekanik Klavye" data-en="Mechanical Keyboard">Mekanik Klavye</span></li>
-                    <li><i class="fa-solid fa-check"></i> <span data-tr="GamePoer 7.1 Kulaklık" data-en="GamePower 7.1 Surround Headset">GamePower 7.1 Kulaklık</span></li>
+                    <li><i class="fa-solid fa-check"></i> <span data-tr="GamePower 7.1 Kulaklık" data-en="GamePower 7.1 Surround Headset">GamePower 7.1 Kulaklık</span></li>
                 </ul>
                 <a href="#contact" class="skew-btn outline" style="width:100%; text-align:center;"><span data-tr="SEÇ" data-en="SELECT">SEÇ</span></a>
             </div>
@@ -565,7 +573,7 @@
             <div class="contact-details">
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
-                    <div><h3 data-tr="ADRES" data-en="ADDRESS">ADRES</h3><p>Osmangazi Mah. Polat Cad.<br> No:10A-B, Sancaktepe/İstanbul 34785</p></div>
+                    <div><h3 data-tr="ADRES" data-en="ADDRESS">ADRES</h3><p>Osmangazi Mah. Polat Cad.<br> No:10A-B, Sancaktepe/İstanbul</p></div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
@@ -635,18 +643,30 @@
         overlay.addEventListener('click', toggleMenu);
         mobileLinks.forEach(link => { link.addEventListener('click', toggleMenu); });
 
-        // GELİŞMİŞ DİL DEĞİŞTİRME SİSTEMİ
-        const langToggle = document.getElementById('lang-toggle');
+        // GELİŞMİŞ DİL DEĞİŞTİRME SİSTEMİ (MASAÜSTÜ VE MOBİL İÇİN)
+        const langToggleDesktop = document.getElementById('lang-toggle');
+        const langToggleMobile = document.getElementById('mobile-lang-toggle');
         let currentLang = 'tr';
-        langToggle.addEventListener('click', () => {
+
+        // Hem masaüstü hem mobil butonlara tıklama olayı
+        function toggleLanguage() {
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             updateLanguage(currentLang);
-        });
+        }
+
+        langToggleDesktop.addEventListener('click', toggleLanguage);
+        langToggleMobile.addEventListener('click', toggleLanguage);
 
         function updateLanguage(lang) {
-            const spans = langToggle.querySelectorAll('span');
-            spans[0].classList.toggle('active', lang === 'tr');
-            spans[1].classList.toggle('active', lang === 'en');
+            // Masaüstü Butonunu Güncelle
+            const spansDesktop = langToggleDesktop.querySelectorAll('span');
+            spansDesktop[0].classList.toggle('active', lang === 'tr');
+            spansDesktop[1].classList.toggle('active', lang === 'en');
+
+            // Mobil Butonunu Güncelle
+            const spansMobile = langToggleMobile.querySelectorAll('span');
+            spansMobile[0].classList.toggle('active', lang === 'tr');
+            spansMobile[1].classList.toggle('active', lang === 'en');
             
             // Text İçeriklerini Güncelle
             document.querySelectorAll(`[data-${lang}]`).forEach(el => {
