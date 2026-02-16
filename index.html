@@ -44,28 +44,52 @@
         }
 
         /* =========================================
-           2. HEADER
+           2. HEADER (MOBİL UYUMLU)
            ========================================= */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 25px 50px; background: rgba(15, 15, 15, 0.9);
+            padding: 20px 50px; background: rgba(15, 15, 15, 0.95);
             backdrop-filter: blur(15px); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
             transition: all 0.4s ease; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         header.hidden { transform: translateY(-100%); }
 
-        .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.8rem; letter-spacing: 2px; color: #fff; }
+        .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.8rem; letter-spacing: 2px; color: #fff; z-index: 1002;}
         .logo i { color: var(--neon-red); font-size: 2rem; filter: drop-shadow(0 0 5px var(--neon-red)); }
 
-        nav ul { display: flex; list-style: none; gap: 40px; }
-        nav a { text-decoration: none; color: #fff; font-weight: 700; font-size: 0.9rem; letter-spacing: 1.5px; transition: 0.3s; position: relative; }
-        nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px; background: var(--neon-red); transition: width 0.3s; }
-        nav a:hover { color: var(--neon-red); text-shadow: 0 0 15px rgba(255, 62, 62, 0.5); }
-        nav a:hover::after { width: 100%; }
+        /* Masaüstü Menü */
+        nav.desktop-nav ul { display: flex; list-style: none; gap: 40px; }
+        nav.desktop-nav a { text-decoration: none; color: #fff; font-weight: 700; font-size: 0.9rem; letter-spacing: 1.5px; transition: 0.3s; position: relative; }
+        nav.desktop-nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px; background: var(--neon-red); transition: width 0.3s; }
+        nav.desktop-nav a:hover { color: var(--neon-red); text-shadow: 0 0 15px rgba(255, 62, 62, 0.5); }
+        nav.desktop-nav a:hover::after { width: 100%; }
 
-        .header-right { display: flex; align-items: center; gap: 30px; }
+        .header-right { display: flex; align-items: center; gap: 30px; z-index: 1002;}
         .lang-switch { cursor: pointer; font-family: var(--font-body); font-weight: 700; color: #888; }
         .lang-switch span.active { color: #fff; border-bottom: 1px solid var(--neon-red); }
+
+        /* MOBİL MENÜ İKONU VE YAPISI */
+        .hamburger { display: none; font-size: 1.8rem; color: #fff; cursor: pointer; z-index: 1002; }
+        
+        .mobile-menu {
+            position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
+            background: #0f0f0f; border-left: 2px solid var(--neon-red);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+            transition: 0.4s ease-in-out; z-index: 1001;
+            box-shadow: -10px 0 50px rgba(0,0,0,0.8);
+        }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu a {
+            font-size: 1.5rem; color: #fff; text-decoration: none; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+        .mobile-menu a:hover { color: var(--neon-red); }
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
 
         /* =========================================
            3. BUTONLAR
@@ -132,7 +156,8 @@
         /* =========================================
            7. SİSTEMLER
            ========================================= */
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+        /* MOBİL DÜZELTME: minmax 350px -> 300px yapıldı ki telefona sığsın */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
         .price-card {
             background: var(--card-bg); border: 1px solid #2a2a2a; border-radius: 24px; padding: 50px 40px;
             transition: 0.4s; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden;
@@ -243,43 +268,26 @@
         
         /* HARİTA STİLİ */
         .map-frame { width: 100%; height: 300px; background: #222; border-radius: 20px; overflow: hidden; border: 1px solid #333; position: relative; margin-top: 20px; }
-        /* Harita Filtresi: Renkleri ters çevirerek dark mode efekti veriyoruz */
+        /* Harita Filtresi */
         .map-frame iframe { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); width: 100%; height: 100%; border: 0; }
 
         footer { text-align: center; padding: 40px; border-top: 1px solid #222; color: #555; background: #050505; font-size: 0.9rem; }
 
-        /* YENİ: SABİT WHATSAPP BUTONU */
+        /* SABİT WHATSAPP BUTONU */
         .floating-whatsapp {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--whatsapp-green);
-            color: #fff;
-            padding: 15px 30px;
-            border-radius: 50px; /* Hap Şekli */
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1rem;
-            font-weight: 700;
-            text-decoration: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-            z-index: 9999;
-            transition: all 0.3s;
-            font-family: var(--font-body);
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--whatsapp-green); color: #fff;
+            padding: 15px 30px; border-radius: 50px;
+            display: flex; align-items: center; gap: 15px;
+            font-size: 1rem; font-weight: 700; text-decoration: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 9999;
+            transition: all 0.3s; font-family: var(--font-body);
         }
-
-        .floating-whatsapp i {
-            font-size: 1.8rem;
-        }
-
-        .floating-whatsapp:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 30px rgba(37, 211, 102, 0.6);
-        }
+        .floating-whatsapp i { font-size: 1.8rem; }
+        .floating-whatsapp:hover { transform: scale(1.05); box-shadow: 0 5px 30px rgba(37, 211, 102, 0.6); }
 
         /* =========================================
-           12. MOBİL UYUMLULUK
+           12. MOBİL UYUMLULUK (RESPONSIVE)
            ========================================= */
         @media (max-width: 1024px) {
             .hero-title { font-size: 5rem; }
@@ -287,26 +295,45 @@
             .gallery-item:nth-child(1) { grid-column: span 2; }
             .gallery-item:nth-child(2) { grid-column: span 2; }
         }
+
         @media (max-width: 768px) {
-            header { padding: 20px; } nav ul { display: none; }
-            .hero-title { font-size: 3.5rem; letter-spacing: -1px; } .hero-desc { font-size: 1rem; padding: 20px; }
-            .hero-buttons { flex-direction: column; width: 100%; } .skew-btn { width: 100%; text-align: center; }
-            .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 200px; } .gallery-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+            header { padding: 15px 20px; }
+            nav.desktop-nav { display: none; } /* Masaüstü menüyü gizle */
+            .hamburger { display: block; } /* Hamburger menüyü aç */
+            
+            .header-right { display: none; } /* Mobilde sağ butonları gizle (Menüye koyabiliriz) */
+            
+            /* HERO MOBİL */
+            .hero-title { font-size: 3.5rem; letter-spacing: -1px; }
+            .hero-desc { font-size: 1rem; padding: 20px; width: 90%; }
+            .hero-buttons { flex-direction: column; width: 100%; }
+            .skew-btn { width: 100%; text-align: center; }
+
+            /* KAYAN YAZI MOBİL (HIZLANDIRILDI) */
+            .marquee-content { animation-duration: 10s; } /* Mobilde daha hızlı aksın */
+            .marquee-item { font-size: 1.2rem; margin: 0 20px; }
+
+            /* SİSTEMLER MOBİL */
+            .pricing-grid { grid-template-columns: 1fr; }
+            .wide-card { padding: 30px 20px; }
+
+            /* GALERİ MOBİL */
+            .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
+            .gallery-item:nth-child(n) { grid-column: span 1; grid-row: span 1; }
+
+            /* TURNUVA MOBİL */
             .tournament-container { flex-direction: column; text-align: center; padding: 40px 20px; }
             .jump-animation-area { margin: 40px 0 0 0; }
+            .tour-meta { flex-direction: column; gap: 20px; }
+            .tour-title { font-size: 3rem; }
+
+            /* İLETİŞİM MOBİL */
             .contact-layout { grid-template-columns: 1fr; gap: 40px; }
             .form-row { grid-template-columns: 1fr; }
             
-            /* Mobilde Butonu Biraz Küçült */
-            .floating-whatsapp { 
-                padding: 10px 20px; 
-                bottom: 20px; 
-                right: 20px; 
-                font-size: 0.9rem;
-            }
-            .floating-whatsapp i {
-                font-size: 1.5rem;
-            }
+            /* WHATSAPP MOBİL */
+            .floating-whatsapp { padding: 12px 20px; bottom: 20px; right: 20px; font-size: 0.9rem; }
+            .floating-whatsapp i { font-size: 1.4rem; }
         }
 
         /* =========================================
@@ -326,24 +353,36 @@
             <i class="fa-solid fa-crosshairs"></i>
             <span>SNIPER</span>
         </div>
-        <nav>
+        
+        <nav class="desktop-nav">
             <ul>
-                <li><a href="#hero" data-tr="ANASAYFA" data-en="HOME">ANASAYFA</a></li>
-                <li><a href="#systems" data-tr="SİSTEMLER" data-en="SYSTEMS">SİSTEMLER</a></li>
-                <li><a href="#tournaments" data-tr="TURNUVALAR" data-en="TOURNAMENTS">TURNUVALAR</a></li>
-                <li><a href="#gallery" data-tr="GALERİ" data-en="GALLERY">GALERİ</a></li>
-                <li><a href="#contact" data-tr="İLETİŞİM & KONUM" data-en="CONTACT & LOCATION">İLETİŞİM & KONUM</a></li>
+                <li><a href="#hero">ANASAYFA</a></li>
+                <li><a href="#systems">SİSTEMLER</a></li>
+                <li><a href="#tournaments">TURNUVALAR</a></li>
+                <li><a href="#gallery">GALERİ</a></li>
+                <li><a href="#contact">İLETİŞİM</a></li>
             </ul>
         </nav>
+
         <div class="header-right">
-            <div class="lang-switch" id="lang-toggle">
-                <span class="active">TR</span> | <span>EN</span>
-            </div>
-            <a href="#contact" class="skew-btn">
-                <span data-tr="REZERVASYON YAP" data-en="BOOK NOW">REZERVASYON YAP</span>
-            </a>
+            <div class="lang-switch" id="lang-toggle"><span class="active">TR</span> | <span>EN</span></div>
+            <a href="#contact" class="skew-btn"><span>REZERVASYON YAP</span></a>
+        </div>
+
+        <div class="hamburger" id="hamburger-btn">
+            <i class="fa-solid fa-bars"></i>
         </div>
     </header>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="#hero" class="mobile-link">ANASAYFA</a>
+        <a href="#systems" class="mobile-link">SİSTEMLER</a>
+        <a href="#tournaments" class="mobile-link">TURNUVALAR</a>
+        <a href="#gallery" class="mobile-link">GALERİ</a>
+        <a href="#contact" class="mobile-link">İLETİŞİM & KONUM</a>
+        <a href="#contact" class="mobile-link" style="color:var(--neon-red); margin-top:20px;">REZERVASYON YAP</a>
+    </div>
 
     <a href="https://wa.me/905393314983" target="_blank" class="floating-whatsapp">
         <i class="fa-brands fa-whatsapp"></i>
@@ -360,12 +399,8 @@
             </p>
         </div>
         <div class="hero-buttons">
-            <a href="#contact" class="skew-btn">
-                <span data-tr="YERİNİ AYIRT" data-en="RESERVE SEAT">YERİNİ AYIRT</span>
-            </a>
-            <a href="#systems" class="skew-btn outline">
-                <span data-tr="ARENAYI KEŞFET" data-en="EXPLORE ARENA">ARENAYI KEŞFET</span>
-            </a>
+            <a href="#contact" class="skew-btn"><span>YERİNİ AYIRT</span></a>
+            <a href="#systems" class="skew-btn outline"><span>ARENAYI KEŞFET</span></a>
         </div>
     </section>
 
@@ -375,22 +410,16 @@
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> VALORANT</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> LEAGUE OF LEGENDS</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> MINECRAFT</span>
-            <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> HYTALE</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> GTA V</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> FIFA 24</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> DOTA 2</span>
-            <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> ROCKET LEAGUE</span>
-            <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> CALL OF DUTY</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> CS2</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> VALORANT</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> LEAGUE OF LEGENDS</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> MINECRAFT</span>
-            <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> HYTALE</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> GTA V</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> FIFA 24</span>
             <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> DOTA 2</span>
-            <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> ROCKET LEAGUE</span>
-            <span class="marquee-item"><i class="fa-solid fa-gamepad"></i> CALL OF DUTY</span>
         </div>
     </div>
 
@@ -411,9 +440,7 @@
                     <li><i class="fa-solid fa-check"></i> Mekanik Klavye</li>
                     <li><i class="fa-solid fa-check"></i> 7.1 Kulaklık</li>
                 </ul>
-                <a href="#contact" class="skew-btn outline" style="width:100%; text-align:center;">
-                    <span data-tr="SEÇ" data-en="SELECT">SEÇ</span>
-                </a>
+                <a href="#contact" class="skew-btn outline" style="width:100%; text-align:center;"><span>SEÇ</span></a>
             </div>
 
             <div class="price-card" style="border-color: var(--neon-red); box-shadow: 0 10px 40px rgba(255,62,62,0.15);">
@@ -421,14 +448,12 @@
                 <h3 class="card-title" data-tr="PLATINUM" data-en="PLATINUM">PLATINUM</h3>
                 <div class="card-price" style="color: var(--neon-red);">80 TL<small>/SAAT</small></div>
                 <ul class="card-features">
-                    <li><i class="fa-solid fa-check"></i> RX 580 Ekran Kartı</li>
+                    <li><i class="fa-solid fa-check"></i> RX 850 Ekran Kartı</li>
                     <li><i class="fa-solid fa-check"></i> 280Hz Monitör</li>
                     <li><i class="fa-solid fa-check"></i> Ryzen 7 5700 İşlemci Set</li>
                     <li><i class="fa-solid fa-check"></i> GamePower Pro Set</li>
                 </ul>
-                <a href="#contact" class="skew-btn" style="width:100%; text-align:center;">
-                    <span data-tr="SEÇ" data-en="SELECT">SEÇ</span>
-                </a>
+                <a href="#contact" class="skew-btn" style="width:100%; text-align:center;"><span>SEÇ</span></a>
             </div>
 
             <div class="price-card">
@@ -441,22 +466,20 @@
                     <li><i class="fa-solid fa-check"></i> GamePower Mekanik Klave</li>
                     <li><i class="fa-solid fa-check"></i> GamePower 7.1 Kulaklık</li>
                 </ul>
-                <a href="#contact" class="skew-btn outline" style="width:100%; text-align:center;">
-                    <span data-tr="SEÇ" data-en="SELECT">SEÇ</span>
-                </a>
+                <a href="#contact" class="skew-btn outline" style="width:100%; text-align:center;"><span>SEÇ</span></a>
             </div>
         </div>
 
         <div class="feature-row">
             <div class="wide-card">
                 <div class="card-icon"><i class="fa-solid fa-gauge-high"></i></div>
-                <h3 class="card-title" data-tr="DİREKSİYON SETİ" data-en="STEERİNG WHEEL SET">DİREKSİYON SETİ <br>(YAKINDA SİZLERLE)</h3>
+                <h3 class="card-title" data-tr="DİREKSİYON SETİ" data-en="SIMULATION">DİREKSİYON SETİ <br>(YAKINDA)</h3>
                 <div class="card-price"> - <small>/SAAT</small></div>
                 
                 <ul class="card-features" style="display:flex; flex-direction:column; align-items:center; border:none; text-align:center;">
-                    <li style="justify-content:center; border:none;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> Moza R3 Profesyonel Direksiyon Seti</li>
-                    <li style="justify-content:center; border:none;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> Huracan Kokpit Seti</li>
-                    <li style="justify-content:center; border:none;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> Onvo 109 Ekran Yüksek Kalite TV</li>
+                    <li style="justify-content:center; border:none;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> Moza R3 Profesyonel Set</li>
+                    <li style="justify-content:center; border:none;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> Huracan Kokpit</li>
+                    <li style="justify-content:center; border:none;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> Onvo 109 Ekran TV</li>
                 </ul>
 
                 <div class="pc-specs-compact">
@@ -465,13 +488,10 @@
                         <span><i class="fa-solid fa-microchip"></i> RTX 3060</span>
                         <span>Ryzen 5 5600X</span>
                         <span>32GB RAM</span>
-                        <span>Akvaryum Kasa</span>
                     </div>
                 </div>
 
-                <a href="#contact" class="skew-btn" style="margin-top:30px; background:var(--neon-orange);">
-                    <span data-tr="REZERVASYON YAP" data-en="BOOK NOW">REZERVASYON YAP</span>
-                </a>
+                <a href="#contact" class="skew-btn" style="margin-top:30px; background:var(--neon-orange);"><span>REZERVASYON YAP</span></a>
             </div>
         </div>
     </section>
@@ -483,34 +503,29 @@
             <span class="hours-item"><i class="fa-regular fa-clock"></i> HER GÜN AÇIĞIZ: 09:00 - 01:00</span>
             <span class="hours-item"><i class="fa-solid fa-check"></i> RESMİ VE DİNİ BAYRAMLAR DAHİL AÇIK</span>
             <span class="hours-item"><i class="fa-regular fa-clock"></i> HER GÜN AÇIĞIZ: 09:00 - 01:00</span>
-            <span class="hours-item"><i class="fa-solid fa-check"></i> RESMİ VE DİNİ BAYRAMLAR DAHİL AÇIK</span>
-            <span class="hours-item"><i class="fa-regular fa-clock"></i> HER GÜN AÇIĞIZ: 09:00 - 01:00</span>
-            <span class="hours-item"><i class="fa-solid fa-check"></i> RESMİ VE DİNİ BAYRAMLAR DAHİL AÇIK</span>
         </div>
     </div>
 
     <section id="tournaments">
         <div class="tournament-container">
             <div class="tour-content">
-                <span class="tour-tag" data-tr="YAKLAŞAN ETKİNLİK" data-en="UPCOMING EVENT">YAKLAŞAN ETKİNLİK</span>
+                <span class="tour-tag" data-tr="YAKLAŞAN ETKİNLİK" data-en="UPCOMING">YAKLAŞAN ETKİNLİK</span>
                 <h2 class="tour-title">BÜYÜK TURNUVA<br>YAKLAŞIYOR</h2>
                 <p class="tour-desc" data-tr="Detaylar ve tarih açıklaması için geri sayım başladı." 
-                   data-en="The countdown has begun for details and date announcements.">
+                   data-en="Details coming soon.">
                    Detaylar ve tarih açıklaması için geri sayım başladı.
                 </p>
                 <div class="tour-meta">
                     <div class="meta-item">
-                        <label data-tr="TARİH" data-en="DATE">TARİH</label>
+                        <label>TARİH</label>
                         <p>Çok Yakında</p>
                     </div>
                     <div class="meta-item">
-                        <label data-tr="GİRİŞ" data-en="ENTRY">GİRİŞ</label>
-                        <p data-tr="Ücretsiz" data-en="Free">Ücretsiz</p>
+                        <label>GİRİŞ</label>
+                        <p>Ücretsiz</p>
                     </div>
                 </div>
-                <a href="#contact" class="skew-btn">
-                    <span data-tr="KAYIT OL" data-en="REGISTER">KAYIT OL</span>
-                </a>
+                <a href="#contact" class="skew-btn"><span>KAYIT OL</span></a>
             </div>
             <div class="jump-animation-area">
                 <div class="jump-box"></div>
@@ -526,87 +541,51 @@
             <p class="section-subtitle">Atmosferi hisset. Yerini ayırt.</p>
         </div>
         <div class="gallery-grid">
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop" alt="Kafe Geniş Açı">
-                <div class="gallery-overlay"><h3>OYUN ALANI</h3><p>Geniş ve Ferah</p></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=1000&auto=format&fit=crop" alt="Neon Işıklar">
-                <div class="gallery-overlay"><h3>ATMOSFER</h3><p>RGB Aydınlatma</p></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1593305841991-05c29736f87e?q=80&w=1000&auto=format&fit=crop" alt="VR">
-                <div class="gallery-overlay"><h3>VR DENEYİMİ</h3><p>Sanal Gerçeklik</p></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=1000&auto=format&fit=crop" alt="Ekipmanlar">
-                <div class="gallery-overlay"><h3>EKİPMANLAR</h3><p>Son Teknoloji</p></div>
-            </div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop"><div class="gallery-overlay"><h3>OYUN ALANI</h3></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=1000&auto=format&fit=crop"><div class="gallery-overlay"><h3>ATMOSFER</h3></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1593305841991-05c29736f87e?q=80&w=1000&auto=format&fit=crop"><div class="gallery-overlay"><h3>VR</h3></div></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=1000&auto=format&fit=crop"><div class="gallery-overlay"><h3>EKİPMAN</h3></div></div>
         </div>
     </section>
 
     <section id="contact" style="background: #080808;">
         <div class="section-header">
-            <h2 class="section-title" data-tr="İLETİŞİM & KONUM" data-en="CONTACT & LOCATION">İLETİŞİM & KONUM</h2>
+            <h2 class="section-title" data-tr="İLETİŞİM" data-en="CONTACT">İLETİŞİM & KONUM</h2>
         </div>
 
         <div class="contact-layout">
             <div class="contact-details">
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fa-solid fa-location-dot"></i></div>
-                    <div>
-                        <h3 data-tr="ADRES" data-en="ADDRESS">ADRES</h3>
-                        <p>Osmangazi, Polat Cd.,<br> 34885 Sancaktepe/İstanbul</p>
-                    </div>
+                    <div><h3>ADRES</h3><p>Osmangazi Mah. Polat Cad.<br> No:10/A Sancaktepe/İstanbul 34785</p></div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
-                    <div>
-                        <h3 data-tr="TELEFON" data-en="PHONE">TELEFON</h3>
-                        <p>0539 331 49 83</p>
-                    </div>
+                    <div><h3>TELEFON</h3><p>0539 331 49 83</p></div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fa-regular fa-clock"></i></div>
-                    <div>
-                        <h3 data-tr="ÇALIŞMA SAATLERİ" data-en="WORKING HOURS">ÇALIŞMA SAATLERİ</h3>
-                        <p style="color: #fff; font-weight: 700;">Haftanın Her Günü: <span style="color: var(--neon-red);">09:00 - 01:00</span></p>
-                        <p style="font-size: 0.9rem; margin-top: 5px; color:#ccc;" data-tr="Resmi ve Dini Bayramlar Dahil AÇIK" data-en="Open on National & Religious Holidays">
-                            <i class="fa-solid fa-check" style="color:var(--neon-red);"></i> Resmi ve Dini Bayramlar Dahil AÇIK
-                        </p>
-                    </div>
+                    <div><h3>ÇALIŞMA SAATLERİ</h3><p style="color:#fff;">Her Gün: <span style="color:var(--neon-red);">09:00 - 01:00</span></p></div>
                 </div>
-
                 <div class="map-frame">
                     <iframe 
-                        src="https://maps.google.com/maps?q=Osmangazi,Polat%20Cd.,Sancaktepe/İstanbul&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                        width="100%" 
-                        height="100%" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3011.667798363764!2d29.22756857655383!3d40.98877197135327!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cadd4095555555%3A0x123456789abcdef!2sOsmangazi%2C%20Polat%20Cd.%2C%2034885%20Sancaktepe%2F%C4%B0stanbul!5e0!3m2!1str!2str!4v1700000000000!5m2!1str!2str" 
+                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                 </div>
             </div>
 
             <div class="form-box" style="border-top: 3px solid var(--whatsapp-green);">
                 <h3 style="font-size:1.8rem; margin-bottom:30px; color:#fff;" data-tr="REZERVASYON YAP" data-en="MAKE RESERVATION">REZERVASYON & İSTEK</h3>
-                <p style="color:#aaa; margin-bottom:20px; font-size:0.9rem;">
-                    <i class="fa-brands fa-whatsapp" style="color:var(--whatsapp-green); font-size:1.2rem;"></i> 
-                    Formu doldurup butona bastığınızda WhatsApp açılacaktır.
-                </p>
                 <form id="whatsappForm">
                     <div class="form-row" style="grid-template-columns: 1fr;">
                         <input type="text" id="wpName" class="form-input" placeholder="İsim Soyisim (Zorunlu)" required>
                     </div>
-                    
                     <div class="form-row" style="grid-template-columns: 1fr;">
                         <textarea id="wpNote" class="form-input" rows="5" placeholder="Mesajınız... (Örn: Yarın akşam 20:00 için 5 kişilik yer var mı?)" required></textarea>
                     </div>
-                    
-                    <button type="submit" class="skew-btn" style="width:100%; border:none; margin-top:10px; background:var(--whatsapp-green); box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);">
-                        <span data-tr="WHATSAPP İLE GÖNDER" data-en="SEND VIA WHATSAPP">WHATSAPP İLE GÖNDER <i class="fa-brands fa-whatsapp"></i></span>
+                    <button type="submit" class="skew-btn" style="width:100%; border:none; margin-top:10px; background:var(--whatsapp-green);">
+                        <span>WHATSAPP İLE GÖNDER <i class="fa-brands fa-whatsapp"></i></span>
                     </button>
                 </form>
             </div>
@@ -618,25 +597,38 @@
     </footer>
 
     <script>
-        // 1. Header Scroll Efekti
+        // HEADER SCROLL
         let lastScrollTop = 0;
         const header = document.getElementById("main-header");
-
         window.addEventListener("scroll", function() {
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                header.classList.add("hidden");
-            } else {
-                header.classList.remove("hidden");
-            }
+            if (scrollTop > lastScrollTop && scrollTop > 100) { header.classList.add("hidden"); } 
+            else { header.classList.remove("hidden"); }
             lastScrollTop = scrollTop;
         });
 
-        // 2. Dil Değiştirme Sistemi
+        // MOBİL MENÜ MANTIĞI (YENİ EKLENDİ)
+        const hamburger = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu); // Dışarı tıklayınca kapanır
+        
+        // Linke tıklayınca menü kapansın
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // DİL DEĞİŞTİRME
         const langToggle = document.getElementById('lang-toggle');
         let currentLang = 'tr';
-
         langToggle.addEventListener('click', () => {
             currentLang = currentLang === 'tr' ? 'en' : 'tr';
             updateLanguage(currentLang);
@@ -646,7 +638,6 @@
             const spans = langToggle.querySelectorAll('span');
             spans[0].classList.toggle('active', lang === 'tr');
             spans[1].classList.toggle('active', lang === 'en');
-
             document.querySelectorAll(`[data-${lang}]`).forEach(el => {
                 if(el.children.length > 0 && el.lastChild.nodeType === Node.TEXT_NODE) {
                     el.lastChild.textContent = el.getAttribute(`data-${lang}`);
@@ -656,25 +647,13 @@
             });
         }
 
-        // 3. BASİTLEŞTİRİLMİŞ WHATSAPP FORM GÖNDERİMİ
+        // WHATSAPP GÖNDERİMİ
         document.getElementById('whatsappForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
-
-            // Formdaki verileri al (Sadece İsim ve Mesaj)
             var name = document.getElementById('wpName').value;
             var note = document.getElementById('wpNote').value;
-
-            // Mesajı Hazırla
-            var message = "Merhaba Sniper Espor, ben *" + name + "*.\n\n" +
-                          "📝 *Mesajım:* " + note;
-
-            // Mesajı URL formatına çevir
-            var encodedMessage = encodeURIComponent(message);
-
-            // Senin numaran (905393314983)
-            var whatsappUrl = "https://wa.me/905393314983?text=" + encodedMessage;
-
-            // Yeni sekmede WhatsApp'ı aç
+            var message = "Merhaba Sniper Espor, ben *" + name + "*.\n\n" + "📝 *Mesajım:* " + note;
+            var whatsappUrl = "https://wa.me/905393314983?text=" + encodeURIComponent(message);
             window.open(whatsappUrl, '_blank');
         });
     </script>
