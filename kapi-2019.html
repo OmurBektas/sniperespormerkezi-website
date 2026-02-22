@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim | Sniper Espor Merkezi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.postimg.cc/Fzn4W2w9/Eren-Internet-Cafe-400.png" type="image/png">
+    
+    <style>
+        :root {
+            --neon-red: #ff3e3e; --neon-orange: #ff6b00; --whatsapp-green: #25D366; 
+            --bg-black: #0f0f0f; --card-bg: #151515; --text-white: #ffffff;
+            --font-main: 'Chakra Petch', sans-serif; --font-body: 'Inter', sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; }
+        
+        /* GİRİŞ EKRANI */
+        #login-screen { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-image: radial-gradient(circle at top, #1a0808, #0f0f0f); padding: 20px; }
+        .login-box { background: var(--card-bg); width: 100%; max-width: 400px; padding: 40px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 0 40px rgba(255, 62, 62, 0.1); text-align: center; }
+        .login-box h2 { font-family: var(--font-main); color: var(--neon-red); margin-bottom: 20px; }
+        .login-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 8px; font-family: var(--font-body); }
+        .btn-red { width: 100%; padding: 15px; background: var(--neon-red); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: var(--font-main); }
+        .btn-red:hover { box-shadow: 0 0 20px rgba(255, 62, 62, 0.5); }
+
+        /* ANA PANEL DÜZENİ */
+        #dashboard-screen { display: none; height: 100vh; overflow: hidden; }
+        .admin-header { background: #080808; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .admin-header h1 { font-family: var(--font-main); font-size: 1.5rem; color: #fff; margin:0; }
+        .admin-header h1 i { color: var(--neon-red); }
+        
+        .header-buttons { display: flex; gap: 10px; align-items: center; }
+        .btn-outline { color: #aaa; text-decoration: none; border: 1px solid #555; padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px; cursor: pointer; background: transparent; font-family: var(--font-main);}
+        .btn-outline:hover { color: #fff; border-color: #fff; }
+        
+        .dashboard-layout { display: flex; height: calc(100vh - 75px); transition: all 0.3s ease; }
+        
+        /* SOL: EDİTÖR */
+        .editor-section { flex: 0 0 50%; max-width: 50%; overflow-y: auto; padding: 30px; background: #0f0f0f; border-right: 1px solid #333; transition: all 0.4s ease; position: relative;}
+        .editor-section.collapsed { flex: 0 0 0%; max-width: 0%; padding: 0; border: none; opacity: 0; overflow: hidden; }
+        .editor-section::-webkit-scrollbar { width: 8px; }
+        .editor-section::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+        /* KATEGORİ MENÜSÜ */
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .cat-box { background: #151515; border: 1px solid #333; border-radius: 15px; padding: 40px 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .cat-box i { font-size: 3rem; color: var(--neon-red); margin-bottom: 15px; display: block; transition: 0.3s;}
+        .cat-box h3 { font-family: var(--font-main); color: #fff; font-size: 1.2rem; margin: 0; letter-spacing: 1px; }
+        .cat-box:hover { border-color: var(--neon-red); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255, 62, 62, 0.15); }
+        .cat-box:hover i { transform: scale(1.1); }
+
+        /* EDİTÖR İÇİ ÜST BAR */
+        .editor-top-bar { display: none; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #333; position: sticky; top: -30px; background: rgba(15,15,15,0.95); z-index: 20; padding: 15px; border-radius: 10px;}
+        .btn-back { background: #222; color: #fff; border: 1px solid #444; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: var(--font-main); font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+        .btn-back:hover { background: var(--neon-red); border-color: var(--neon-red); }
+        
+        .lang-tabs { display: flex; gap: 10px; }
+        .lang-tab { padding: 10px 20px; text-align: center; font-weight: bold; font-family: var(--font-main); cursor: pointer; border-radius: 5px; transition: 0.3s; background: transparent; color: #888; border: 1px solid transparent; }
+        .lang-tab.active { background: #222; color: #fff; border-color: #444; }
+        
+        .editor-pane { display: none; }
+        
+        .admin-card { background: #151515; border: 1px solid #2a2a2a; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .admin-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .admin-card-header h3 { font-family: var(--font-main); color: var(--neon-orange); margin:0;}
+        .move-btns button { background: #222; border: 1px solid #444; color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-left: 5px; transition:0.3s;}
+        .move-btns button:hover { background: #444; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 5px; text-transform: uppercase; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 5px; font-family: var(--font-body); transition: 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--neon-red); outline: none; box-shadow: 0 0 10px rgba(255, 62, 62, 0.2); }
+
+        /* SAĞ: ÖNİZLEME */
+        .preview-section { flex: 1; overflow-y: auto; padding: 30px 50px; background: #050505; position: relative; transition: all 0.4s ease; }
+        .preview-section::-webkit-scrollbar { width: 8px; }
+        .preview-section::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .preview-title { font-family: var(--font-main); color: #555; text-align: center; margin-bottom: 30px; letter-spacing: 2px; position: sticky; top: -30px; background: rgba(5,5,5,0.9); padding: 10px; z-index: 10; border-radius: 10px;}
+        
+        #preview-area { max-width: 1200px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
+
+        /* ÖNİZLEME - SİSTEM KARTLARI */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .price-card { background: var(--card-bg); border: 1px solid #2a2a2a; border-radius: 24px; padding: 40px 20px; transition: 0.4s; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; }
+        .card-icon { width: 70px; height: 70px; background: rgba(255, 62, 62, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; font-size: 2rem; color: var(--neon-red); }
+        .card-title { font-size: 1.8rem; margin-bottom: 10px; font-family: var(--font-main); font-weight: 700; }
+        .card-price { font-size: 3rem; font-weight: 800; margin-bottom: 25px; font-family: var(--font-main); }
+        .card-price small { font-size: 1rem; color: #888; }
+        .card-features { list-style: none; width: 100%; text-align: center; margin-bottom: 20px; padding: 0; display:flex; flex-direction:column; align-items:center;}
+        .card-features li { margin-bottom: 12px; color: #ccc; font-size: 0.95rem; border-bottom: 1px solid #222; padding-bottom: 8px; display:flex; gap:8px; align-items:center; border:none; justify-content:center;}
+        .card-features i { color: var(--neon-red); }
+
+        /* ÖNİZLEME - DİREKSİYON SETİ */
+        .feature-row { margin-top: 50px; display: flex; justify-content: center; width: 100%; }
+        .wide-card { background: linear-gradient(145deg, #1a1a1a, #0f0f0f); border: 2px solid #333; border-radius: 24px; padding: 40px; width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; }
+        .wide-card .card-icon { color: var(--neon-orange); background: rgba(255, 107, 0, 0.1); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; margin-bottom: 30px;}
+        .wide-card .card-price { color: var(--neon-orange); font-size: 3rem; font-weight: 800; font-family: var(--font-main); margin-bottom: 20px; }
+        .wide-card .card-title { font-family: var(--font-main); font-size: 2rem; font-weight: 700; }
+        
+        .pc-specs-compact { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border: 1px solid #333; margin-top: 20px; width: 100%; }
+        .pc-specs-title { font-size: 0.9rem; color: var(--neon-orange); font-weight: 700; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-main);}
+        .pc-specs-list { color: #ccc; font-size: 0.95rem; font-family: var(--font-body); display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .pc-specs-list span { display: flex; align-items: center; gap: 5px; }
+        .pc-specs-list span::after { content: '|'; color: #444; margin-left: 10px; }
+        .pc-specs-list span:last-child::after { content: ''; }
+
+        /* ÖNİZLEME - TURNUVA KARTI */
+        .tournament-container { background: linear-gradient(135deg, #151515 0%, #0a0a0a 100%); border: 1px solid #333; border-radius: 30px; padding: 50px 40px; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; margin-top: 50px; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+        .tournament-container::before { content: ''; position: absolute; top: -50%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 107, 0, 0.15) 0%, transparent 70%); z-index: 0; pointer-events: none; }
+        .tour-content { position: relative; z-index: 2; text-align: left; max-width: 600px; }
+        .tour-tag { background: var(--neon-red); color: #fff; padding: 8px 15px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; display: inline-block; margin-bottom: 20px; border-radius: 5px; transform: skewX(-10deg); }
+        .tour-title { font-size: 2.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 15px; font-family: var(--font-main); }
+        .tour-desc { font-family: var(--font-body); color: #bbb; margin-bottom: 20px; font-size: 1.1rem; }
+        .tour-meta { display: flex; gap: 40px; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; margin-bottom: 20px;}
+        .meta-item label { display: block; color: #888; font-size: 0.8rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
+        .meta-item p { font-size: 1.5rem; font-weight: 700; color: #fff; margin:0; font-family: var(--font-main);}
+        
+        .skew-btn { background: var(--neon-red); color: #fff; padding: 14px 35px; border: none; font-family: var(--font-main); font-weight: 800; font-size: 1rem; letter-spacing: 1px; transform: skewX(-15deg); display: inline-block; text-decoration: none;}
+        .skew-btn > span { display: block; transform: skewX(15deg); }
+        
+        .jump-animation-area { position: relative; z-index: 1; display: flex; gap: 15px; margin-right: 20px; }
+        .jump-box { width: 60px; height: 60px; background: #ff6b00; border-radius: 12px; box-shadow: 0 0 20px rgba(255, 107, 0, 0.5); }
+        .jump-box:nth-child(1) { animation: bounce 2.2s infinite ease-in-out; }
+        .jump-box:nth-child(2) { animation: bounce 2.2s infinite ease-in-out 0.2s; background: #ff8533; margin-top: 30px; }
+        .jump-box:nth-child(3) { animation: bounce 2.2s infinite ease-in-out 0.4s; background: #ff9e66; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.8; } 50% { transform: translateY(-30px); opacity: 1; box-shadow: 0 0 40px rgba(255, 107, 0, 1); } }
+        
+        /* ÖNİZLEME - GALERİ */
+        .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; gap: 15px; margin-top: 40px;}
+        .gallery-item { position: relative; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
+        .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+        .gallery-item:nth-child(2) { grid-column: span 2; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 15px; }
+        .gallery-overlay h3 { font-size: 1.2rem; color: var(--neon-red); margin-bottom: 0; font-family: var(--font-main);}
+
+        /* SİHİRLİ GİZLEME SINIFLARI */
+        .editor-container.mode-tr .lang-en { display: none; }
+        .editor-container.mode-en .lang-tr { display: none; }
+
+        /* MOBİL UYUM */
+        @media (max-width: 1200px) {
+            .admin-header { flex-direction: column; gap:15px; }
+            .dashboard-layout { flex-direction: column; height: auto; }
+            .editor-section { max-width: 100%; border-right: none; border-bottom: 2px solid var(--neon-red); padding: 15px; }
+            .preview-section { padding: 15px; }
+            #dashboard-screen { overflow: auto; }
+            .tournament-container { flex-direction: column; text-align: center; padding: 30px 20px; }
+            .tour-content { text-align: center; }
+            .tour-meta { justify-content: center; }
+            .jump-animation-area { margin: 40px 0 0 0; justify-content: center; }
+            .cat-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 200px); }
+            .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+            .gallery-item:nth-child(2) { grid-column: span 2; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2><i class="fa-solid fa-lock"></i> SİSTEME GİRİŞ</h2>
+            <input type="email" id="emailInput" placeholder="E-posta Adresi">
+            <input type="password" id="passwordInput" placeholder="Şifre">
+            <button class="btn-red" id="loginBtn" onclick="loginUser()">GİRİŞ YAP</button>
+            <p id="loginError" style="color:var(--neon-red); margin-top:10px; display:none; font-size:0.9rem;">Hatalı bilgi!</p>
+        </div>
+    </div>
+
+    <div id="dashboard-screen">
+        <div class="admin-header">
+            <h1><i class="fa-solid fa-crosshairs"></i> YÖNETİM PANELİ</h1>
+            <div class="header-buttons">
+                <a href="index.html" target="_blank" class="btn-outline" title="Ana Sayfaya Git"><i class="fa-solid fa-globe"></i> SİTEYE GİT</a>
+                <button onclick="toggleEditor()" id="toggleEditorBtn" class="btn-outline" style="background:#222;"><i class="fa-solid fa-expand"></i> ÖNİZLEMEYİ BÜYÜT</button>
+                <button onclick="saveToFirebase()" class="btn-red" id="saveGlobalBtn" style="padding:10px 20px; width:auto;"><i class="fa-solid fa-cloud-arrow-up"></i> YAYINLA</button>
+                <button onclick="logoutUser()" class="btn-outline" title="Çıkış Yap"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+        </div>
+
+        <div class="dashboard-layout">
+            
+            <div class="editor-section" id="editor-panel">
+                
+                <div id="category-menu">
+                    <h2 style="font-family:var(--font-main); color:#fff; margin-bottom:20px; text-align:center;">DÜZENLENECEK BÖLÜMÜ SEÇİN</h2>
+                    <div class="cat-grid">
+                        <div class="cat-box" onclick="openCategory('sys')">
+                            <i class="fa-solid fa-desktop"></i>
+                            <h3>Sistemler</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('rac')">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <h3>Direksiyon Seti</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('tour')">
+                            <i class="fa-solid fa-trophy"></i>
+                            <h3>Etkinlik & Turnuva</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('gal')">
+                            <i class="fa-solid fa-images"></i>
+                            <h3>Galeri</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="editor-contents" style="display:none;">
+                    <div class="editor-top-bar">
+                        <button class="btn-back" onclick="closeCategory()"><i class="fa-solid fa-arrow-left"></i> Geri Dön</button>
+                        <div class="lang-tabs">
+                            <div class="lang-tab active" id="tab-tr" onclick="switchLang('tr')">TR</div>
+                            <div class="lang-tab" id="tab-en" onclick="switchLang('en')">EN</div>
+                        </div>
+                    </div>
+
+                    <div id="edit-sys" class="editor-pane editor-container mode-tr"></div>
+                    
+                    <div id="edit-rac" class="editor-pane admin-card editor-container mode-tr">
+                        <div class="form-group"><label>Saatlik Fiyat (Ortak)</label><input type="text" id="r_price" oninput="uRacing('price', this.value)"></div>
+                        <div class="lang-tr">
+                            <div class="form-group"><label>Durum Etiketi (TR)</label><input type="text" id="r_statusTR" oninput="uRacing('statusTR', this.value)" placeholder="(YAKINDA)"></div>
+                            <div class="form-group"><label>Başlık (TR)</label><input type="text" id="r_titleTR" oninput="uRacing('titleTR', this.value)"></div>
+                            <div class="form-group"><label>1. Özellik (TR)</label><input type="text" id="r_f1TR" oninput="uRacing('f1TR', this.value)"></div>
+                            <div class="form-group"><label>2. Özellik (TR)</label><input type="text" id="r_f2TR" oninput="uRacing('f2TR', this.value)"></div>
+                            <div class="form-group"><label>3. Özellik (TR)</label><input type="text" id="r_f3TR" oninput="uRacing('f3TR', this.value)"></div>
+                            <hr style="border-color:#333; margin:20px 0;">
+                            <h4 style="color:#aaa; margin-bottom:10px; font-family:'Inter'; text-transform:uppercase; font-size:0.8rem;">Sistem Gücü Özellikleri (TR)</h4>
+                            <div class="form-group"><label>Ekran Kartı</label><input type="text" id="r_spec1TR" oninput="uRacing('spec1TR', this.value)"></div>
+                            <div class="form-group"><label>İşlemci</label><input type="text" id="r_spec2TR" oninput="uRacing('spec2TR', this.value)"></div>
+                            <div class="form-group"><label>RAM</label><input type="text" id="r_spec3TR" oninput="uRacing('spec3TR', this.value)"></div>
+                            <div class="form-group"><label>Kasa Tipi</label><input type="text" id="r_spec4TR" oninput="uRacing('spec4TR', this.value)"></div>
+                        </div>
+                        <div class="lang-en">
+                            <div class="form-group"><label>Durum Etiketi (EN)</label><input type="text" id="r_statusEN" oninput="uRacing('statusEN', this.value)" placeholder="(COMING SOON)"></div>
+                            <div class="form-group"><label>Başlık (EN)</label><input type="text" id="r_titleEN" oninput="uRacing('titleEN', this.value)"></div>
+                            <div class="form-group"><label>1. Özellik (EN)</label><input type="text" id="r_f1EN" oninput="uRacing('f1EN', this.value)"></div>
+                            <div class="form-group"><label>2. Özellik (EN)</label><input type="text" id="r_f2EN" oninput="uRacing('f2EN', this.value)"></div>
+                            <div class="form-group"><label>3. Özellik (EN)</label><input type="text" id="r_f3EN" oninput="uRacing('f3EN', this.value)"></div>
+                            <hr style="border-color:#333; margin:20px 0;">
+                            <h4 style="color:#aaa; margin-bottom:10px; font-family:'Inter'; text-transform:uppercase; font-size:0.8rem;">Sistem Gücü Özellikleri (EN)</h4>
+                            <div class="form-group"><label>Ekran Kartı</label><input type="text" id="r_spec1EN" oninput="uRacing('spec1EN', this.value)"></div>
+                            <div class="form-group"><label>İşlemci</label><input type="text" id="r_spec2EN" oninput="uRacing('spec2EN', this.value)"></div>
+                            <div class="form-group"><label>RAM</label><input type="text" id="r_spec3EN" oninput="uRacing('spec3EN', this.value)"></div>
+                            <div class="form-group"><label>Kasa Tipi</label><input type="text" id="r_spec4EN" oninput="uRacing('spec4EN', this.value)"></div>
+                        </div>
+                    </div>
+
+                    <div id="edit-tour" class="editor-pane admin-card editor-container mode-tr">
+                        <div class="lang-tr">
+                            <div class="form-group"><label>Üst Etiket (TR)</label><input type="text" id="t_tagTR" oninput="uTour('tagTR', this.value)"></div>
+                            <div class="form-group"><label>Başlık (TR)</label><textarea rows="2" id="t_titleTR" oninput="uTour('titleTR', this.value)" placeholder="Alt satıra inmek için enter'a basın"></textarea></div>
+                            <div class="form-group"><label>Açıklama (TR)</label><textarea rows="2" id="t_descTR" oninput="uTour('descTR', this.value)" placeholder="Alt satıra inmek için enter'a basın"></textarea></div>
+                            <div class="form-group"><label>Giriş Ücreti (TR)</label><input type="text" id="t_entryTR" oninput="uTour('entryTR', this.value)"></div>
+                            <div class="form-group"><label>Buton Yazısı (TR)</label><input type="text" id="t_btnTR" oninput="uTour('btnTR', this.value)"></div>
+                        </div>
+                        <div class="lang-en">
+                            <div class="form-group"><label>Üst Etiket (EN)</label><input type="text" id="t_tagEN" oninput="uTour('tagEN', this.value)"></div>
+                            <div class="form-group"><label>Başlık (EN)</label><textarea rows="2" id="t_titleEN" oninput="uTour('titleEN', this.value)" placeholder="Press enter for a new line"></textarea></div>
+                            <div class="form-group"><label>Açıklama (EN)</label><textarea rows="2" id="t_descEN" oninput="uTour('descEN', this.value)" placeholder="Press enter for a new line"></textarea></div>
+                            <div class="form-group"><label>Giriş Ücreti (EN)</label><input type="text" id="t_entryEN" oninput="uTour('entryEN', this.value)"></div>
+                            <div class="form-group"><label>Buton Yazısı (EN)</label><input type="text" id="t_btnEN" oninput="uTour('btnEN', this.value)"></div>
+                        </div>
+                        <div class="form-group"><label>Ortak Tarih / Saat</label><input type="text" id="t_date" oninput="uTour('date', this.value)"></div>
+                    </div>
+
+                    <div id="edit-gal" class="editor-pane admin-card editor-container mode-tr"></div>
+                </div>
+
+            </div>
+
+            <div class="preview-section" id="preview-panel">
+                <div class="preview-title"><i class="fa-solid fa-eye"></i> CANLI ÖNİZLEME (<span id="prev-lang-text">TR</span>)</div>
+                <div id="preview-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcaSGBZFE--qB9tmWLraB4DkQuf3LtFHA",
+            authDomain: "sniperespormerkezi.firebaseapp.com",
+            projectId: "sniperespormerkezi",
+            storageBucket: "sniperespormerkezi.firebasestorage.app",
+            messagingSenderId: "633581273873",
+            appId: "1:633581273873:web:cab7015b1f49823130c2b0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // KAPANIR/AÇILIR DÜZENLEYİCİ MANTIĞI
+        let isEditorOpen = true;
+        window.toggleEditor = function() {
+            isEditorOpen = !isEditorOpen;
+            const editor = document.getElementById('editor-panel');
+            const btn = document.getElementById('toggleEditorBtn');
+            if(isEditorOpen) {
+                editor.classList.remove('collapsed');
+                btn.innerHTML = '<i class="fa-solid fa-expand"></i> ÖNİZLEMEYİ BÜYÜT';
+            } else {
+                editor.classList.add('collapsed');
+                btn.innerHTML = '<i class="fa-solid fa-compress"></i> DÜZENLEYİCİYİ AÇ';
+            }
+        }
+
+        // KATEGORİ MENÜSÜ MANTIĞI
+        window.openCategory = function(catName) {
+            document.getElementById('category-menu').style.display = 'none';
+            document.getElementById('editor-contents').style.display = 'block';
+            document.querySelector('.editor-top-bar').style.display = 'flex';
+            
+            document.querySelectorAll('.editor-pane').forEach(el => el.style.display = 'none');
+            document.getElementById('edit-' + catName).style.display = 'block';
+
+            let previewTarget = document.getElementById('prev-' + catName);
+            if(previewTarget) previewTarget.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+
+        window.closeCategory = function() {
+            document.getElementById('category-menu').style.display = 'grid';
+            document.getElementById('editor-contents').style.display = 'none';
+            document.querySelector('.editor-top-bar').style.display = 'none';
+        }
+
+        window.appData = {
+            systems: [
+                { id: 's1', icon: 'fa-star', theme: 'standart', titleTR: 'STANDART', titleEN: 'STANDARD', price: '60', f1TR: 'ASUS 1050TI Ekran Kartı', f1EN: 'ASUS 1050TI Graphics', f2TR: '144Hz Monitör', f2EN: '144Hz Monitor', f3TR: 'Mekanik Klavye', f3EN: 'Mechanical Keyboard', f4TR: 'GamePower 7.1 Kulaklık', f4EN: 'GamePower 7.1 Surround Headset' },
+                { id: 's2', icon: 'fa-crown', theme: 'platinum', titleTR: 'PLATINUM', titleEN: 'PLATINUM', price: '80', f1TR: 'RX 850 Ekran Kartı', f1EN: 'RX 850 Graphics', f2TR: '280Hz Monitör', f2EN: '280Hz Monitor', f3TR: 'Ryzen 7 5700 İşlemci Set', f3EN: 'Ryzen 7 5700 CPU Set', f4TR: 'GamePower Pro Set', f4EN: 'GamePower Pro Gear' },
+                { id: 's3', icon: 'fa-shield-halved', theme: 'gold', titleTR: 'GOLD', titleEN: 'GOLD', price: '70', f1TR: 'RX 580 Ekran Kartı', f1EN: 'RX 580 Graphics', f2TR: '240Hz Monitör', f2EN: '240Hz Monitor', f3TR: 'GamePower Mekanik Klavye', f3EN: 'GamePower Mech Keyboard', f4TR: 'GamePower 7.1 Kulaklık', f4EN: 'GamePower 7.1 Headset' }
+            ],
+            racing: {
+                price: '-', titleTR: 'DİREKSİYON SETİ', titleEN: 'RACING SIMULATOR',
+                statusTR: '(YAKINDA)', statusEN: '(COMING SOON)',
+                f1TR: 'Moza R3 Profesyonel Set', f1EN: 'Moza R3 Pro Wheel Set',
+                f2TR: 'Huracan Kokpit', f2EN: 'Huracan Cockpit',
+                f3TR: 'Onvo 109 Ekran TV', f3EN: 'Onvo 109cm TV Display',
+                spec1TR: 'RTX 3060', spec1EN: 'RTX 3060',
+                spec2TR: 'Ryzen 5 5600X', spec2EN: 'Ryzen 5 5600X',
+                spec3TR: '32GB RAM', spec3EN: '32GB RAM',
+                spec4TR: 'Akvaryum Kasa', spec4EN: 'Panoramic Case'
+            },
+            tournament: {
+                tagTR: 'YAKLAŞAN ETKİNLİK', tagEN: 'UPCOMING EVENT',
+                titleTR: 'VALORANT TURNUVASI\nYAKLAŞIYOR!', titleEN: 'THE VALORANT TOURNAMENT\nIS COMING SOON!',
+                descTR: 'Yeteneklerini sergileme zamanı!', descEN: 'Time to showcase your skills!',
+                date: '08.03.2026 - 15:00',
+                entryTR: 'Ücretsiz', entryEN: 'Free',
+                btnTR: 'KAYIT OL', btnEN: 'REGISTER'
+            },
+            gallery: [
+                { img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop', titleTR: 'OYUN ALANI', titleEN: 'GAMING AREA' },
+                { img: 'https://images.unsplash.com/photo-1605901309584-818e25960b8f?q=80&w=1000&auto=format&fit=crop', titleTR: 'ATMOSFER', titleEN: 'ATMOSPHERE' },
+                { img: 'https://images.unsplash.com/photo-1593305841991-05c29736f87e?q=80&w=1000&auto=format&fit=crop', titleTR: 'VR DENEYİMİ', titleEN: 'VR EXPERIENCE' },
+                { img: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=1000&auto=format&fit=crop', titleTR: 'EKİPMANLAR', titleEN: 'PRO GEAR' }
+            ]
+        };
+
+        window.currentEditLang = 'tr';
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'block';
+                await loadFromFirebase();
+                renderAll();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('dashboard-screen').style.display = 'none';
+            }
+        });
+
+        window.loginUser = function() {
+            const e = document.getElementById('emailInput').value;
+            const p = document.getElementById('passwordInput').value;
+            document.getElementById('loginBtn').innerText = "BEKLEYİN...";
+            signInWithEmailAndPassword(auth, e, p).catch(() => {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginBtn').innerText = "GİRİŞ YAP";
+            });
+        }
+        window.logoutUser = () => signOut(auth);
+
+        window.switchLang = function(lang) {
+            currentEditLang = lang;
+            document.getElementById('tab-tr').classList.toggle('active', lang === 'tr');
+            document.getElementById('tab-en').classList.toggle('active', lang === 'en');
+            
+            document.querySelectorAll('.editor-container').forEach(el => {
+                el.className = el.className.replace(/mode-tr|mode-en/g, '') + ` mode-${lang}`;
+            });
+            document.getElementById('prev-lang-text').innerText = lang.toUpperCase();
+            renderPreview(); 
+        }
+
+        window.uSys = function(index, field, val) { appData.systems[index][field] = val; renderPreview(); }
+        window.uRacing = function(field, val) { appData.racing[field] = val; renderPreview(); }
+        window.uTour = function(field, val) { appData.tournament[field] = val; renderPreview(); }
+        window.uGal = function(index, field, val) { appData.gallery[index][field] = val; renderPreview(); }
+
+        window.moveSys = function(index, dir) {
+            if (dir === -1 && index > 0) {
+                let temp = appData.systems[index];
+                appData.systems[index] = appData.systems[index - 1];
+                appData.systems[index - 1] = temp;
+            } else if (dir === 1 && index < appData.systems.length - 1) {
+                let temp = appData.systems[index];
+                appData.systems[index] = appData.systems[index + 1];
+                appData.systems[index + 1] = temp;
+            }
+            renderAll();
+        }
+
+        function renderAll() {
+            renderEditor();
+            renderRacingEditor();
+            renderTourEditor();
+            renderGalleryEditor();
+            renderPreview();
+        }
+
+        function renderEditor() {
+            let html = '';
+            appData.systems.forEach((sys, i) => {
+                html += `
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3><i class="fa-solid fa-desktop"></i> Sıra ${i+1}: ${sys.titleTR}</h3>
+                        <div class="move-btns">
+                            <button onclick="moveSys(${i}, -1)" ${i===0?'disabled':''}><i class="fa-solid fa-arrow-left"></i> Sol</button>
+                            <button onclick="moveSys(${i}, 1)" ${i===2?'disabled':''}>Sağ <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>Saatlik Fiyat (Ortak)</label><input type="text" value="${sys.price}" oninput="uSys(${i}, 'price', this.value)"></div>
+                    <div class="lang-tr">
+                        <div class="form-group"><label>Başlık (TR)</label><input value="${sys.titleTR}" oninput="uSys(${i}, 'titleTR', this.value)"></div>
+                        <div class="form-group"><label>1. Özellik (TR)</label><input value="${sys.f1TR}" oninput="uSys(${i}, 'f1TR', this.value)"></div>
+                        <div class="form-group"><label>2. Özellik (TR)</label><input value="${sys.f2TR}" oninput="uSys(${i}, 'f2TR', this.value)"></div>
+                        <div class="form-group"><label>3. Özellik (TR)</label><input value="${sys.f3TR}" oninput="uSys(${i}, 'f3TR', this.value)"></div>
+                        <div class="form-group"><label>4. Özellik (TR)</label><input value="${sys.f4TR}" oninput="uSys(${i}, 'f4TR', this.value)"></div>
+                    </div>
+                    <div class="lang-en">
+                        <div class="form-group"><label>Başlık (EN)</label><input value="${sys.titleEN}" oninput="uSys(${i}, 'titleEN', this.value)"></div>
+                        <div class="form-group"><label>1. Özellik (EN)</label><input value="${sys.f1EN}" oninput="uSys(${i}, 'f1EN', this.value)"></div>
+                        <div class="form-group"><label>2. Özellik (EN)</label><input value="${sys.f2EN}" oninput="uSys(${i}, 'f2EN', this.value)"></div>
+                        <div class="form-group"><label>3. Özellik (EN)</label><input value="${sys.f3EN}" oninput="uSys(${i}, 'f3EN', this.value)"></div>
+                        <div class="form-group"><label>4. Özellik (EN)</label><input value="${sys.f4EN}" oninput="uSys(${i}, 'f4EN', this.value)"></div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('edit-sys').innerHTML = html;
+        }
+
+        function renderRacingEditor() {
+            document.getElementById('r_price').value = appData.racing.price;
+            document.getElementById('r_statusTR').value = appData.racing.statusTR !== undefined ? appData.racing.statusTR : '(YAKINDA)';
+            document.getElementById('r_titleTR').value = appData.racing.titleTR;
+            document.getElementById('r_f1TR').value = appData.racing.f1TR;
+            document.getElementById('r_f2TR').value = appData.racing.f2TR;
+            document.getElementById('r_f3TR').value = appData.racing.f3TR;
+            document.getElementById('r_spec1TR').value = appData.racing.spec1TR || 'RTX 3060';
+            document.getElementById('r_spec2TR').value = appData.racing.spec2TR || 'Ryzen 5 5600X';
+            document.getElementById('r_spec3TR').value = appData.racing.spec3TR || '32GB RAM';
+            document.getElementById('r_spec4TR').value = appData.racing.spec4TR || 'Akvaryum Kasa';
+
+            document.getElementById('r_statusEN').value = appData.racing.statusEN !== undefined ? appData.racing.statusEN : '(COMING SOON)';
+            document.getElementById('r_titleEN').value = appData.racing.titleEN;
+            document.getElementById('r_f1EN').value = appData.racing.f1EN;
+            document.getElementById('r_f2EN').value = appData.racing.f2EN;
+            document.getElementById('r_f3EN').value = appData.racing.f3EN;
+            document.getElementById('r_spec1EN').value = appData.racing.spec1EN || 'RTX 3060';
+            document.getElementById('r_spec2EN').value = appData.racing.spec2EN || 'Ryzen 5 5600X';
+            document.getElementById('r_spec3EN').value = appData.racing.spec3EN || '32GB RAM';
+            document.getElementById('r_spec4EN').value = appData.racing.spec4EN || 'Panoramic Case';
+        }
+
+        function renderTourEditor() {
+            document.getElementById('t_tagTR').value = appData.tournament.tagTR;
+            document.getElementById('t_titleTR').value = appData.tournament.titleTR;
+            document.getElementById('t_descTR').value = appData.tournament.descTR;
+            document.getElementById('t_entryTR').value = appData.tournament.entryTR;
+            document.getElementById('t_btnTR').value = appData.tournament.btnTR;
+
+            document.getElementById('t_tagEN').value = appData.tournament.tagEN;
+            document.getElementById('t_titleEN').value = appData.tournament.titleEN;
+            document.getElementById('t_descEN').value = appData.tournament.descEN;
+            document.getElementById('t_entryEN').value = appData.tournament.entryEN;
+            document.getElementById('t_btnEN').value = appData.tournament.btnEN;
+
+            document.getElementById('t_date').value = appData.tournament.date;
+        }
+
+        function renderGalleryEditor() {
+            let html = '';
+            appData.gallery.forEach((g, i) => {
+                html += `
+                <div style="border:1px solid #333; padding:15px; border-radius:10px; margin-bottom:15px; background:#0a0a0a;">
+                    <div style="color:var(--neon-red); font-weight:bold; margin-bottom:10px;">Resim ${i+1}</div>
+                    <div class="form-group"><label>Görsel Linki (URL)</label><input value="${g.img}" oninput="uGal(${i}, 'img', this.value)"></div>
+                    <div class="lang-tr"><div class="form-group"><label>Resim Yazısı (TR)</label><input value="${g.titleTR}" oninput="uGal(${i}, 'titleTR', this.value)"></div></div>
+                    <div class="lang-en"><div class="form-group"><label>Resim Yazısı (EN)</label><input value="${g.titleEN}" oninput="uGal(${i}, 'titleEN', this.value)"></div></div>
+                </div>`;
+            });
+            document.getElementById('edit-gal').innerHTML = html;
+        }
+
+        function renderPreview() {
+            let isTr = currentEditLang === 'tr';
+            
+            // 1. SİSTEMLER
+            let html = '<div id="prev-sys" style="padding-top:20px;"></div><div class="pricing-grid">';
+            appData.systems.forEach(sys => {
+                let isPlat = sys.theme === 'platinum';
+                let styleCard = isPlat ? 'border-color: var(--neon-red); box-shadow: 0 10px 40px rgba(255,62,62,0.15);' : '';
+                let styleIcon = isPlat ? 'background: var(--neon-red); color:#fff;' : '';
+                let stylePrice = isPlat ? 'color: var(--neon-red);' : '';
+                html += `
+                <div class="price-card" style="${styleCard}">
+                    <div class="card-icon" style="${styleIcon}"><i class="fa-solid ${sys.icon}"></i></div>
+                    <h3 class="card-title">${isTr ? sys.titleTR : sys.titleEN}</h3>
+                    <div class="card-price" style="${stylePrice}">${sys.price} TL<small>${isTr?'/SAAT':'/HOUR'}</small></div>
+                    <ul class="card-features" style="padding:0; width:100%; text-align:center;">
+                        <li style="border:none; margin-bottom:10px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-check"></i> <span>${isTr ? sys.f1TR : sys.f1EN}</span></li>
+                        <li style="border:none; margin-bottom:10px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-check"></i> <span>${isTr ? sys.f2TR : sys.f2EN}</span></li>
+                        <li style="border:none; margin-bottom:10px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-check"></i> <span>${isTr ? sys.f3TR : sys.f3EN}</span></li>
+                        <li style="border:none; margin-bottom:10px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-check"></i> <span>${isTr ? sys.f4TR : sys.f4EN}</span></li>
+                    </ul>
+                </div>`;
+            });
+            html += '</div>';
+
+            // 2. DİREKSİYON SETİ
+            let rStatus = isTr ? (appData.racing.statusTR !== undefined ? appData.racing.statusTR : '(YAKINDA)') : (appData.racing.statusEN !== undefined ? appData.racing.statusEN : '(COMING SOON)');
+            html += `<div id="prev-rac" style="padding-top:40px;"></div>
+            <div class="feature-row">
+                <div class="wide-card">
+                    <div class="card-icon" style="color:var(--neon-orange); background:rgba(255,107,0,0.1); width:80px; height:80px; border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:2.5rem; margin-bottom:20px;"><i class="fa-solid fa-gauge-high"></i></div>
+                    <h3 class="card-title" style="font-family:var(--font-main); font-size:2rem; font-weight:700;">${isTr ? appData.racing.titleTR : appData.racing.titleEN} <br><span style="font-size:0.6em;">${rStatus}</span></h3>
+                    <div class="card-price" style="color:var(--neon-orange); font-size:3rem; font-weight:800; font-family:var(--font-main); margin-bottom:20px;">${appData.racing.price} <small style="font-size:1rem; color:#888;">${isTr?'/SAAT':'/HOUR'}</small></div>
+                    <ul class="card-features" style="padding:0; width:100%; text-align:center;">
+                        <li style="border:none; margin-bottom:10px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> <span>${isTr ? appData.racing.f1TR : appData.racing.f1EN}</span></li>
+                        <li style="border:none; margin-bottom:10px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> <span>${isTr ? appData.racing.f2TR : appData.racing.f2EN}</span></li>
+                        <li style="border:none; margin-bottom:10px; display:flex; justify-content:center; align-items:center; gap:8px;"><i class="fa-solid fa-circle-check" style="color:var(--neon-orange);"></i> <span>${isTr ? appData.racing.f3TR : appData.racing.f3EN}</span></li>
+                    </ul>
+                    <div class="pc-specs-compact">
+                        <div class="pc-specs-title">${isTr ? 'SİSTEM GÜCÜ' : 'SYSTEM POWER'}</div>
+                        <div class="pc-specs-list">
+                            <span><i class="fa-solid fa-microchip"></i> ${isTr ? (appData.racing.spec1TR||'RTX 3060') : (appData.racing.spec1EN||'RTX 3060')}</span>
+                            <span>${isTr ? (appData.racing.spec2TR||'Ryzen 5 5600X') : (appData.racing.spec2EN||'Ryzen 5 5600X')}</span>
+                            <span>${isTr ? (appData.racing.spec3TR||'32GB RAM') : (appData.racing.spec3EN||'32GB RAM')}</span>
+                            <span>${isTr ? (appData.racing.spec4TR||'Akvaryum Kasa') : (appData.racing.spec4EN||'Panoramic Case')}</span>
+                        </div>
+                    </div>
+                    <a href="#contact" class="skew-btn" style="margin-top:30px; background:var(--neon-orange);"><span>${isTr ? 'REZERVASYON YAP' : 'BOOK NOW'}</span></a>
+                </div>
+            </div>`;
+
+            // 3. TURNUVA
+            let tTitle = (isTr ? (appData.tournament.titleTR || '') : (appData.tournament.titleEN || '')).replace(/\n/g, '<br>');
+            let tDesc = (isTr ? (appData.tournament.descTR || '') : (appData.tournament.descEN || '')).replace(/\n/g, '<br>');
+            
+            html += `<div id="prev-tour" style="padding-top:40px;"></div>
+            <div class="tournament-container">
+                <div class="tour-content">
+                    <span class="tour-tag">${isTr ? appData.tournament.tagTR : appData.tournament.tagEN}</span>
+                    <h2 class="tour-title">${tTitle}</h2>
+                    <p class="tour-desc">${tDesc}</p>
+                    <div class="tour-meta">
+                        <div class="meta-item"><label>${isTr ? 'TARİH' : 'DATE'}</label><p>${appData.tournament.date}</p></div>
+                        <div class="meta-item"><label>${isTr ? 'GİRİŞ' : 'ENTRY'}</label><p>${isTr ? appData.tournament.entryTR : appData.tournament.entryEN}</p></div>
+                    </div>
+                    <a href="#contact" class="skew-btn"><span>${isTr ? appData.tournament.btnTR : appData.tournament.btnEN}</span></a>
+                </div>
+                <div class="jump-animation-area">
+                    <div class="jump-box"></div><div class="jump-box"></div><div class="jump-box"></div>
+                </div>
+            </div>`;
+
+            // 4. GALERİ
+            html += `<div id="prev-gal" style="padding-top:40px;"></div><div class="gallery-grid">`;
+            appData.gallery.forEach((g, i) => {
+                let colSpan = (i === 0) ? 'grid-column: span 2; grid-row: span 2;' : (i === 1 ? 'grid-column: span 2;' : 'grid-column: span 1;');
+                html += `
+                <div class="gallery-item" style="${colSpan}">
+                    <img src="${g.img}">
+                    <div class="gallery-overlay"><h3>${isTr ? g.titleTR : g.titleEN}</h3></div>
+                </div>`;
+            });
+            html += '</div>';
+
+            document.getElementById('preview-area').innerHTML = html;
+        }
+
+        async function loadFromFirebase() {
+            const docSnap = await getDoc(doc(db, "siteData", "v2Data"));
+            if (docSnap.exists() && docSnap.data().systems) {
+                let data = docSnap.data();
+                window.appData.systems = data.systems;
+                window.appData.tournament = { ...window.appData.tournament, ...data.tournament };
+                window.appData.racing = { ...window.appData.racing, ...data.racing };
+                window.appData.gallery = data.gallery || window.appData.gallery;
+            }
+        }
+
+        window.saveToFirebase = async function() {
+            const btn = document.getElementById('saveGlobalBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> YAYINLANIYOR...';
+            await setDoc(doc(db, "siteData", "v2Data"), window.appData);
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> YAYINLANDI';
+            btn.style.background = "var(--whatsapp-green)";
+            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> YAYINLA'; btn.style.background = "var(--neon-red)"; }, 3000);
+        }
+    </script>
+</body>
+</html>
