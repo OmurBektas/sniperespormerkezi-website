@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Turnuva Merkezi | Sniper Espor</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           1. GENEL AYARLAR & TEMA
+           ========================================= */
+        :root { 
+            --neon-red: #ff3e3e; --dark-red: #cc0000; --neon-orange: #ff6b00; --whatsapp-green: #25D366; 
+            --bg-black: #050505; --bg-darker: #000000; --card-bg: #0f0f0f; 
+            --text-white: #ffffff; --text-gray: #888888; 
+            --font-main: 'Chakra Petch', sans-serif; --font-body: 'Inter', sans-serif; 
+            --team-red: #ff4d4d; --team-blue: #00d2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; line-height: 1.6; }
+        
+        /* HEADER (MENÜ) */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.8rem; letter-spacing: 2px; color: #fff; font-family: var(--font-main); text-decoration: none;}
+        .logo i { color: var(--neon-red); }
+        nav.desktop-nav ul { display: flex; list-style: none; gap: 40px; }
+        nav.desktop-nav a { text-decoration: none; color: #fff; font-weight: 700; font-size: 0.9rem; letter-spacing: 1.5px; transition: 0.3s; font-family: var(--font-main); }
+        nav.desktop-nav a:hover { color: var(--neon-red); }
+        
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .header-btn { background: transparent; border: 1px solid #333; color: #fff; padding: 10px 25px; border-radius: 5px; font-family: var(--font-main); font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.3s; }
+        .header-btn:hover { border-color: var(--neon-red); color: var(--neon-red); }
+
+        .mobile-header-controls { display: none; align-items: center; gap: 20px; }
+        .hamburger { font-size: 1.8rem; color: #fff; cursor: pointer; }
+        .mobile-menu { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: #0f0f0f; border-left: 2px solid var(--neon-red); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; transition: 0.4s ease-in-out; z-index: 1001; }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu a { font-size: 1.5rem; color: #fff; text-decoration: none; font-weight: 800; font-family: var(--font-main); }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        .tour-hero { padding: 150px 10% 80px 10%; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; position: relative; background: radial-gradient(circle at top right, rgba(255, 62, 62, 0.05), transparent 50%); }
+        .tour-status-badge { background: rgba(255, 62, 62, 0.1); border: 1px solid var(--neon-red); color: var(--neon-red); padding: 5px 15px; font-family: var(--font-main); font-weight: bold; font-size: 0.8rem; letter-spacing: 2px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; width: fit-content; border-radius: 3px; }
+        .tour-status-badge.mvp-badge { border-color: var(--neon-orange); color: var(--neon-orange); background: rgba(255, 107, 0, 0.1); }
+        .tour-status-badge i { font-size: 0.6rem; animation: blink 2s infinite; }
+
+        .tour-main-title { font-family: var(--font-main); font-size: clamp(3rem, 6vw, 6rem); font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 20px; color: #fff; text-shadow: 0 0 30px rgba(255, 62, 62, 0.3); }
+        .tour-main-title span { color: var(--neon-red); text-shadow: 0 0 40px rgba(255, 62, 62, 0.8); }
+        .tour-desc { font-size: 1.1rem; color: #aaa; max-width: 600px; margin-bottom: 40px; }
+
+        .info-boxes { display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .info-box { background: #0a0a0a; border: 1px solid #222; padding: 20px 30px; text-align: center; border-radius: 5px; min-width: 140px; }
+        .info-box span { display: block; font-family: var(--font-main); font-size: 2rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 5px; }
+        .info-box label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+
+        .action-area { max-width: 500px; }
+        .smart-btn { width: 100%; padding: 20px; font-family: var(--font-main); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%); }
+        .smart-btn:disabled { cursor: not-allowed; opacity: 0.9; }
+        .smart-btn i { font-size: 1.2rem; }
+        
+        .btn-red { background: var(--neon-red); color: #fff; box-shadow: 0 10px 30px rgba(255, 62, 62, 0.3); }
+        .btn-red:hover { background: var(--dark-red); transform: translateX(5px); }
+        .btn-dark { background: #111; color: #fff; border: 1px solid #333; }
+        .btn-dark:hover { background: #1a1a1a; border-color: #555; }
+        .btn-orange { background: var(--neon-orange); color: #000; }
+        .btn-green { background: var(--whatsapp-green); color: #000; clip-path: none; border-radius: 5px; }
+
+        .user-profile-bar { margin-top: 15px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #888; background: #111; padding: 10px 15px; width: fit-content; border-left: 2px solid #333; }
+        .user-profile-bar .name { color: #fff; font-weight: bold; }
+        .user-profile-bar .rank { color: var(--neon-orange); font-family: var(--font-main); font-weight: bold; }
+
+        /* MVP & LİDERLİK TABLOSU */
+        .mvp-leaderboard-section { display: flex; gap: 50px; padding: 80px 10%; background: #050505; border-top: 1px solid #111; max-width: 1400px; margin: 0 auto; }
+        .half-col { flex: 1; }
+
+        .mvp-card { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 5px; overflow: hidden; position: relative; height: 100%; display: flex; flex-direction: column; min-height: 550px; }
+        .mvp-badge { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); padding: 5px 15px; font-family: var(--font-main); font-size: 0.8rem; letter-spacing: 1px; z-index: 2; font-weight: bold;}
+        .mvp-image-area { flex: 1; background-size: cover; background-position: top center; position: relative; background-image: linear-gradient(to bottom, rgba(0,0,0,0) 60%, #0a0a0a 100%), url('turnuva_resimler/8-mart-2026/8-mart-2026-mvp-resim/mvp.jpg'); }
+        .mvp-name { position: absolute; bottom: 20px; left: 30px; font-family: var(--font-main); font-size: 2.5rem; font-weight: 900; color: #fff; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,0,0,0.9);}
+        .mvp-stats { display: flex; justify-content: space-between; padding: 25px 30px; background: #0a0a0a; border-top: 1px solid #1a1a1a; }
+        .stat-item label { display: block; color: #666; font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
+        .stat-item span { font-family: var(--font-main); font-size: 1.5rem; color: #fff; font-weight: bold; }
+        .stat-item span.orange-text { color: var(--neon-orange); }
+
+        .lb-list { display: flex; flex-direction: column; gap: 15px; }
+        .lb-item { display: flex; align-items: center; justify-content: space-between; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; border-radius: 5px; transition: 0.3s; }
+        .lb-item:hover { border-color: #333; transform: translateX(5px); }
+        .lb-left { display: flex; align-items: center; gap: 20px; }
+        .lb-rank { font-family: var(--font-main); font-size: 2rem; font-weight: 900; color: #222; }
+        .lb-info h4 { font-family: var(--font-main); font-size: 1.5rem; color: #fff; margin-bottom: 2px; line-height: 1; }
+        .lb-info p { color: #666; font-size: 0.8rem; }
+        .lb-right { text-align: right; }
+        .lb-right label { display: block; color: #666; font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;}
+        .lb-right span { font-family: var(--font-main); font-size: 1.5rem; font-weight: bold; color: #fff; }
+
+        .btn-view-all { width: 100%; padding: 20px; background: transparent; border: 1px solid #222; color: #fff; font-family: var(--font-main); font-weight: bold; font-size: 0.9rem; letter-spacing: 2px; cursor: pointer; transition: 0.3s; margin-top: 15px; }
+        .btn-view-all:hover { border-color: var(--neon-red); color: var(--neon-red); }
+
+        /* TURNUVA TABLOSU */
+        .bracket-section { padding: 80px 10%; background: #0a0a0a; border-top: 1px solid #111; text-align: center; overflow-x: auto; }
+        .section-title { font-family: var(--font-main); font-size: 2.5rem; color: #fff; text-transform: uppercase; margin-bottom: 10px; }
+        .section-title span { color: var(--neon-red); text-shadow: 0 0 20px rgba(255,62,62,0.5); }
+        .section-subtitle { color: #666; font-size: 0.9rem; margin-bottom: 50px; }
+
+        .bracket-container { display: flex; justify-content: center; align-items: center; gap: 40px; min-width: 1000px; margin: 0 auto; padding-bottom: 20px; }
+        .bracket-col { display: flex; flex-direction: column; justify-content: center; gap: 40px; position: relative; }
+        
+        .match-box { background: #0f0f0f; border: 1px solid #222; width: 310px; border-radius: 5px; position: relative; }
+        .match-header { background: #151515; padding: 10px 15px; font-size: 0.8rem; color: #aaa; text-align: center; font-family: var(--font-main); border-bottom: 1px solid #222; font-weight: bold; letter-spacing: 1px; border-radius: 4px 4px 0 0;}
+        
+        .player-list { list-style: none; padding: 0; margin: 0; background: #080808; border-radius: 0 0 4px 4px; overflow: hidden;}
+        .player-list li { padding: 8px 15px; font-size: 0.85rem; color: #666; border-bottom: 1px solid #111; font-family: var(--font-body); text-align: left; display: flex; justify-content: space-between; align-items: center;}
+        .player-list li:last-child { border-bottom: none; }
+        
+        .dm-list li { color: #fff; }
+        .kda-text { color: #888; font-size: 0.75rem; font-family: var(--font-main); letter-spacing: 1px; font-weight: bold; }
+
+        .winner-list li { color: #fff; }
+        .winner-list li i { color: var(--whatsapp-green); font-size: 0.85rem;}
+
+        .final-box { border: 2px solid var(--neon-red); width: 350px; border-radius: 5px;}
+        .team-block { padding-bottom: 10px; }
+        .team-title { font-family: var(--font-main); font-size: 1.1rem; color: #fff; padding: 15px; text-align: center; font-weight: bold; letter-spacing: 1px;}
+        
+        .winner-team-blue .team-title { background: rgba(0, 210, 255, 0.1); border-bottom: 2px solid var(--team-blue); color: var(--team-blue); border-radius: 4px 4px 0 0;}
+        .loser-team-red .team-title { background: rgba(255, 77, 77, 0.1); border-bottom: 2px solid var(--team-red); color: var(--team-red); border-top: 1px dashed #333;}
+        
+        .bracket-col.elemeler::after { content: ''; position: absolute; right: -20px; top: 25%; height: 50%; width: 2px; background: #444; z-index: 0; }
+        .bracket-col.elemeler .match-box::after { content: ''; position: absolute; right: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+        .bracket-col.yari-final::before { content: ''; position: absolute; left: -20px; top: 50%; height: 2px; width: 20px; background: #444; z-index: 0; }
+        .bracket-col.yari-final::after { content: ''; position: absolute; right: -20px; top: 25%; height: 50%; width: 2px; background: #444; z-index: 0; }
+        .bracket-col.yari-final .match-box::after { content: ''; position: absolute; right: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+        .bracket-col.final::before { content: ''; position: absolute; left: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+
+        /* MEDYA */
+        .media-section { padding: 80px 10%; background: #080808; border-top: 1px solid #111; text-align: center; }
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+        .media-item { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #1a1a1a; aspect-ratio: 16/9; cursor: pointer; transition: 0.3s; background: #0f0f0f; display: flex; justify-content: center; align-items: center;}
+        .media-item:hover { border-color: var(--neon-red); transform: scale(1.03); z-index: 2; box-shadow: 0 10px 30px rgba(255, 62, 62, 0.2); }
+        .media-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; cursor: pointer; }
+        .media-item video { width: 100%; height: 100%; object-fit: cover; outline: none; border: none; }
+        .media-item:hover img { opacity: 1; }
+
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.95); z-index: 99999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(5px);}
+        .lightbox.active { display: flex; opacity: 1; }
+        .lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 0 50px rgba(255, 62, 62, 0.4); border: 2px solid var(--neon-red); }
+        .lightbox-close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 2.5rem; cursor: pointer; transition: 0.3s; }
+        .lightbox-close:hover { color: var(--neon-red); transform: scale(1.1); }
+
+        .archive-section { padding: 80px 10%; background: #050505; border-top: 1px solid #111; }
+        .archive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .archive-card { border: 1px solid #1a1a1a; border-radius: 5px; padding: 30px; transition: 0.3s; position: relative; overflow: hidden; }
+        .archive-card:hover { border-color: #333; transform: translateY(-5px); }
+        
+        .ac-date { font-size: 0.75rem; color: #ccc; font-family: var(--font-main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .ac-title { font-family: var(--font-main); font-size: 1.8rem; font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 10px; text-transform: uppercase; text-shadow: 0 0 10px #000; }
+        .ac-mvp { color: var(--neon-orange); font-size: 1rem; font-weight: bold; margin-bottom: 20px; text-shadow: 0 0 10px #000; }
+        
+        .ac-link { color: var(--neon-red); text-decoration: none; font-size: 0.85rem; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; transition: 0.3s; text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 3px; }
+        .ac-link:hover { gap: 10px; background: rgba(0,0,0,0.8); }
+
+        .empty-card { display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px dashed #222; background: transparent; text-align: center; color: #444; min-height: 200px;}
+        .empty-card i { font-size: 2rem; margin-bottom: 10px; }
+
+        /* LOADING EKRANI */
+        #loading-screen { position: fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:9999; display:flex; flex-direction:column; gap: 20px; justify-content:center; align-items:center; font-family:var(--font-main); font-size:1.2rem; color:var(--neon-red); letter-spacing: 2px;}
+        footer { text-align: center; padding: 30px; border-top: 1px solid #111; color: #444; background: #000; font-size: 0.85rem; }
+
+        @media (max-width: 900px) { .mvp-leaderboard-section { flex-direction: column; } }
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; } nav.desktop-nav, .header-right { display: none; } .mobile-header-controls { display: flex; }
+            .tour-hero { padding: 120px 20px 60px 20px; text-align: left; } .tour-main-title { font-size: 3rem; }
+            .info-boxes { flex-direction: row; gap: 10px; justify-content: flex-start; } .info-box { padding: 15px 20px; min-width: auto; flex: 1; } .info-box span { font-size: 1.5rem; }
+            .action-area { width: 100%; max-width: 100%; } .smart-btn { font-size: 1rem; padding: 18px; clip-path: polygon(0 0, 100% 0, 97% 100%, 0% 100%); }
+            .bracket-section, .mvp-leaderboard-section, .media-section, .archive-section { padding: 60px 20px; } .archive-grid, .media-grid { grid-template-columns: 1fr; }
+            .lightbox-close { top: 10px; right: 20px; }
+        }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <i class="fa-solid fa-crosshairs fa-spin" style="font-size: 3rem;"></i>
+        <div>YÜKLENİYOR...</div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <i class="fa-solid fa-xmark lightbox-close" onclick="closeLightbox()"></i>
+        <img src="" id="lightbox-img" alt="Büyütülmüş Resim">
+    </div>
+
+    <header>
+        <a href="index.html" class="logo"><i class="fa-solid fa-crosshairs"></i><span>SNIPER</span></a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html#hero">ANASAYFA</a></li>
+                <li><a href="index.html#systems">SİSTEMLER</a></li>
+                <li><a href="turnuva.html" data-tr="TURNUVA" data-en="TOURNAMENT">TURNUVA</a></li>
+                <li><a href="index.html#gallery">GALERİ</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <a href="giris.html" class="header-btn" id="header-login-btn">GİRİŞ YAP / KAYIT OL</a>
+        </div>
+        <div class="mobile-header-controls">
+            <div class="hamburger" id="hamburger-btn"><i class="fa-solid fa-bars"></i></div>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobile-menu">
+        <a href="index.html#hero">ANASAYFA</a>
+        <a href="index.html#systems">SİSTEMLER</a>
+        <a href="turnuva.html" data-tr="TURNUVA" data-en="TOURNAMENT">TURNUVA</a>
+        <a href="index.html#gallery">GALERİ</a>
+        <a href="giris.html" id="mobile-login-btn" style="color:var(--neon-red); margin-top:20px;">GİRİŞ YAP / KAYIT OL</a>
+    </div>
+
+    <section class="tour-hero">
+        <div class="tour-status-badge mvp-badge" id="ui-badge"></div>
+        
+        <h1 class="tour-main-title" id="ui-title">YÜKLENİYOR...</h1>
+        <p class="tour-desc" id="ui-desc">Lütfen bekleyin...</p>
+        
+        <div class="info-boxes">
+            <div class="info-box">
+                <span id="ui-date-day">--</span>
+                <label>TARİH</label>
+            </div>
+            <div class="info-box">
+                <span id="ui-date-time">--:--</span>
+                <label>SAAT</label>
+            </div>
+            <div class="info-box">
+                <span id="ui-entry">--</span>
+                <label id="ui-entry-label">DURUM</label>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <button id="main-action-btn" class="smart-btn btn-dark" disabled>
+                YÜKLENİYOR... <i class="fa-solid fa-spinner fa-spin"></i>
+            </button>
+            
+            <div id="user-status-container" style="display: none;">
+                <div class="user-profile-bar">
+                    <div><i class="fa-regular fa-user"></i> <span class="name" id="user-name">Oyuncu</span></div>
+                    <div><i class="fa-solid fa-medal" style="color:var(--neon-orange); margin-left:10px;"></i> Rank: <span class="rank" id="user-rank">0 Puan</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mvp-leaderboard-section">
+        <div class="half-col">
+            <h2 class="section-title" id="dynamic-mvp-title" style="text-align: left;"><i class="fa-solid fa-bullseye" style="color:var(--neon-red); font-size:1.5rem; margin-right:10px;"></i> TURNUVA <span>MVP'Sİ</span></h2>
+            
+            <div class="mvp-card">
+                <div class="mvp-badge">ELİT STATÜ</div>
+                <div class="mvp-image-area" id="ui-mvp-image" style="background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, #0a0a0a 100%), url('turnuva_resimler/8-mart-2026/8-mart-2026-mvp-resim/mvp.jpg') center/cover;">
+                    <div class="mvp-name" id="ui-mvp-name">愛してます</div>
+                </div>
+                <div class="mvp-stats">
+                    <div class="stat-item">
+                        <label>ÇATIŞMA SKORU</label>
+                        <span id="ui-mvp-score">310</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>ÖLDÜRME (KİLL)</label>
+                        <span id="ui-mvp-k">24</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>ÖLÜM (DEATH)</label>
+                        <span class="orange-text" id="ui-mvp-d">15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="half-col">
+            <h2 class="section-title" style="text-align: left;"><i class="fa-solid fa-chart-line" style="color:var(--neon-red); font-size:1.5rem; margin-right:10px;"></i> <span>LİDERLİK TABLOSU</span></h2>
+            
+            <div class="lb-list" id="arc-leaderboard-container">
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank" style="color:var(--neon-orange);">01</div>
+                        <div class="lb-info">
+                            <h4>愛してます</h4>
+                            <p>K: 24 | D: 15 | A: 1</p>
+                        </div>
+                    </div>
+                    <div class="lb-right">
+                        <label>ÇATIŞMA SKORU</label>
+                        <span style="color:var(--neon-orange);">310</span>
+                    </div>
+                </div>
+
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank" style="color:#444;">02</div>
+                        <div class="lb-info">
+                            <h4>tokito</h4>
+                            <p>K: 23 | D: 16 | A: 4</p>
+                        </div>
+                    </div>
+                    <div class="lb-right">
+                        <label>ÇATIŞMA SKORU</label>
+                        <span style="color:#fff;">288</span>
+                    </div>
+                </div>
+
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank" style="color:#444;">03</div>
+                        <div class="lb-info">
+                            <h4>Love you</h4>
+                            <p>K: 19 | D: 20 | A: 7</p>
+                        </div>
+                    </div>
+                    <div class="lb-right">
+                        <label>ÇATIŞMA SKORU</label>
+                        <span style="color:#fff;">285</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-view-all" onclick="alert('Turnuvanın tam sıralama listesi (Leaderboard) yakında eklenecektir!')">TÜM SIRALAMAYI GÖR</button>
+        </div>
+    </section>
+
+    <section class="bracket-section">
+        <h2 class="section-title">TURNUVA <span>TABLOSU</span></h2>
+        <p class="section-subtitle">Deathmatch elemelerinden 5v5 Büyük Final'e uzanan hayatta kalma mücadelesi.</p>
+
+        <div class="bracket-container" id="arc-bracket-container">
+            <div class="bracket-col elemeler">
+                <div class="match-box">
+                    <div class="match-header">DEATHMATCH: GRUP 1</div>
+                    <ul class="player-list dm-list">
+                        <li><span>tokito</span> <span class="kda-text">40/16/4</span></li>
+                        <li><span>愛してます</span> <span class="kda-text">38/23/4</span></li>
+                        <li><span>28hasanege34</span> <span class="kda-text">34/26/3</span></li>
+                        <li><span>Samurai100</span> <span class="kda-text">30/15/0</span></li>
+                        <li><span>Yusufduyan</span> <span class="kda-text">28/24/5</span></li>
+                        <li><span>YETİMISIRAN</span> <span class="kda-text">25/29/9</span></li>
+                        <li><span>akın</span> <span class="kda-text">21/28/5</span></li>
+                        <li><span>woronBABA</span> <span class="kda-text">11/25/5</span></li>
+                        <li><span>vapurmotoru</span> <span class="kda-text">9/29/8</span></li>
+                        <li><span>mamimanami126</span> <span class="kda-text">7/28/6</span></li>
+                    </ul>
+                </div>
+                <div class="match-box">
+                    <div class="match-header">DEATHMATCH: GRUP 2</div>
+                    <ul class="player-list dm-list">
+                        <li><span>King of Legends</span> <span class="kda-text">40/19/2</span></li>
+                        <li><span>Love you</span> <span class="kda-text">38/17/1</span></li>
+                        <li><span>Vasili Zaytsev</span> <span class="kda-text">30/27/8</span></li>
+                        <li><span>roxe1</span> <span class="kda-text">29/28/9</span></li>
+                        <li><span>ajmmsttarr</span> <span class="kda-text">26/30/6</span></li>
+                        <li><span>Okeanos1</span> <span class="kda-text">24/25/7</span></li>
+                        <li><span>akkoca37</span> <span class="kda-text">24/30/7</span></li>
+                        <li><span>STROM3161</span> <span class="kda-text">23/30/5</span></li>
+                        <li><span>THATSMYJASON</span> <span class="kda-text">19/30/2</span></li>
+                        <li><span>TurboS****İ31</span> <span class="kda-text">13/30/7</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bracket-col yari-final">
+                <div class="match-box">
+                    <div class="match-header" style="color:var(--whatsapp-green);">GRUP 1 FİNALİSTLERİ</div>
+                    <ul class="player-list winner-list">
+                        <li>tokito <i class="fa-solid fa-check"></i></li>
+                        <li>愛してます <i class="fa-solid fa-check"></i></li>
+                        <li>28hasanege34 <i class="fa-solid fa-check"></i></li>
+                        <li>Samurai100 <i class="fa-solid fa-check"></i></li>
+                        <li>Yusufduyan <i class="fa-solid fa-check"></i></li>
+                    </ul>
+                </div>
+                <div class="match-box">
+                    <div class="match-header" style="color:var(--whatsapp-green);">GRUP 2 FİNALİSTLERİ</div>
+                    <ul class="player-list winner-list">
+                        <li>King of Legends <i class="fa-solid fa-check"></i></li>
+                        <li>Love you <i class="fa-solid fa-check"></i></li>
+                        <li>Vasili Zaytsev <i class="fa-solid fa-check"></i></li>
+                        <li>roxe1 <i class="fa-solid fa-check"></i></li>
+                        <li>ajmmsttarr <i class="fa-solid fa-check"></i></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bracket-col final" style="justify-content: center;">
+                <div style="color: var(--neon-red); font-family: var(--font-main); font-weight:bold; margin-bottom:10px; font-size:1.4rem;"><i class="fa-solid fa-trophy"></i> BÜYÜK FİNAL (5v5)</div>
+                <div class="match-box final-box">
+                    <div class="team-block winner-team-blue">
+                        <div class="team-title">ŞAMPİYON TAKIM <i class="fa-solid fa-trophy" style="color:var(--team-blue);"></i></div>
+                        <ul class="player-list dm-list">
+                            <li><span>愛してます</span> <span class="kda-text">24/15/1</span></li>
+                            <li><span>roxe1</span> <span class="kda-text">20/19/6</span></li>
+                            <li><span>Samurai100</span> <span class="kda-text">18/13/5</span></li>
+                            <li><span>Vasili Zaytsev</span> <span class="kda-text">14/13/10</span></li>
+                            <li><span>28hasanege34</span> <span class="kda-text">12/14/4</span></li>
+                        </ul>
+                    </div>
+                    <div class="team-block loser-team-red">
+                        <div class="team-title">2. TAKIM</div>
+                        <ul class="player-list dm-list" style="opacity: 0.8;">
+                            <li><span>tokito</span> <span class="kda-text">23/16/4</span></li>
+                            <li><span>Love you</span> <span class="kda-text">19/20/7</span></li>
+                            <li><span>King of Legends</span> <span class="kda-text">16/17/0</span></li>
+                            <li><span>Yusufduyan</span> <span class="kda-text">10/17/9</span></li>
+                            <li><span>ajmmsttarr</span> <span class="kda-text">6/18/2</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="media-section">
+        <div class="section-header">
+            <h2 class="section-title">MAÇTAN <span>KARELER & VİDEOLAR</span></h2>
+            <p class="section-subtitle">Turnuvanın en heyecanlı anları, öne çıkan vuruşlar ve e-spor merkezimizden manzaralar.</p>
+        </div>
+        
+        <div class="media-grid" id="tour-media-container">
+            <div class="media-item">
+                <img src="turnuva_resimler/8-mart-2026/8-mart-2026-galeri/1.jpeg" alt="Turnuva Karesi 1" onclick="openLightbox(this)">
+            </div>
+            <div class="media-item">
+                <img src="turnuva_resimler/8-mart-2026/8-mart-2026-galeri/2.jpeg" alt="Turnuva Karesi 2" onclick="openLightbox(this)">
+            </div>
+            <div class="media-item">
+                <img src="turnuva_resimler/8-mart-2026/8-mart-2026-galeri/3.jpeg" alt="Turnuva Karesi 3" onclick="openLightbox(this)">
+            </div>
+            <div class="media-item">
+                <video src="turnuva_resimler/8-mart-2026/8-mart-2026-galeri/4.mp4" controls preload="metadata"></video>
+            </div>
+        </div>
+    </section>
+
+    <section class="archive-section">
+        <div class="section-header">
+            <h2>TURNUVA <span>ARŞİVİ</span></h2>
+            <p>Geçmiş savaşların efsaneleri ve şampiyonluk öyküleri.</p>
+        </div>
+        <div class="archive-grid" id="archive-grid-container">
+            <div class="archive-card empty-card">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <div style="font-family: var(--font-main); font-weight: bold;">ARŞİV YÜKLENİYOR...</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Sniper Espor Merkezi. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('overlay');
+        function toggleMenu() { mobileMenu.classList.toggle('active'); overlay.classList.toggle('active'); }
+        hamburger.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+
+        function openLightbox(imgEl) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = imgEl.src;
+            lb.classList.add('active');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if(e.target === this) closeLightbox();
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcaSGBZFE--qB9tmWLraB4DkQuf3LtFHA",
+            authDomain: "sniperespormerkezi.firebaseapp.com",
+            projectId: "sniperespormerkezi",
+            storageBucket: "sniperespormerkezi.firebasestorage.app",
+            messagingSenderId: "633581273873",
+            appId: "1:633581273873:web:cab7015b1f49823130c2b0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        async function fetchTournamentData() {
+            const docSnap = await getDoc(doc(db, "siteData", "v2Data"));
+            if (docSnap.exists()) {
+                let data = docSnap.data();
+                
+                // === 1. HERO KISMININ YÖNETİMİ: SADECE ADMIN PANELİNİ OKUR ===
+                if(data.tournament) {
+                    let t = data.tournament;
+                    
+                    let formattedTitle = t.titleTR ? t.titleTR.replace(/\n/g, '<br>') : "TURNUVA BEKLENİYOR";
+                    document.getElementById('ui-title').innerHTML = formattedTitle;
+                    
+                    document.getElementById('ui-desc').innerHTML = t.descTR ? t.descTR.replace(/\n/g, '<br>') : "-";
+                    document.getElementById('ui-entry').innerText = t.entryTR || "-";
+                    
+                    let dateStr = t.date || "-";
+                    let dateParts = dateStr.split('-');
+                    document.getElementById('ui-date-day').innerText = dateParts[0] ? dateParts[0].trim() : '-';
+                    document.getElementById('ui-date-time').innerText = dateParts[1] ? dateParts[1].trim() : '-';
+
+                    const badge = document.getElementById('ui-badge');
+                    const mainBtn = document.getElementById('main-action-btn');
+
+                    let isRegistrationOpen = t.regStatus === "open";
+
+                    if (isRegistrationOpen) {
+                        badge.innerHTML = `<i class="fa-solid fa-circle"></i> <span>${t.tagTR}</span>`;
+                        badge.className = 'tour-status-badge';
+                        document.getElementById('ui-entry-label').innerText = 'GİRİŞ ÜCRETİ';
+
+                        mainBtn.innerHTML = `${t.btnTR} <i class="fa-solid fa-chevron-right"></i>`;
+                        mainBtn.className = "smart-btn btn-red";
+                        mainBtn.disabled = false;
+                        mainBtn.onclick = () => { window.location.href = "giris.html"; };
+                    } else {
+                        // Eğer kapalıysa Butonu kilitle ve gri yap
+                        badge.innerHTML = `<i class="fa-solid fa-lock" style="animation:none;"></i> <span>${t.tagTR}</span>`;
+                        badge.className = 'tour-status-badge';
+                        document.getElementById('ui-entry-label').innerText = 'DURUM';
+
+                        mainBtn.innerHTML = `${t.btnTR} <i class="fa-solid fa-lock"></i>`;
+                        mainBtn.className = "smart-btn btn-dark";
+                        mainBtn.disabled = true;
+                        mainBtn.onclick = null;
+                    }
+                }
+
+                // === 2. DİNAMİK VİTRİN GÜNCELLEMESİ (Arşivden en son maçı alarak sergiler) ===
+                if(data.archive && data.archive.length > 0) {
+                    let lastArc = data.archive[0];
+
+                    // Her halükarda MVP Bilgisini yenisiyle güncelle
+                    document.getElementById('ui-mvp-name').innerText = lastArc.mvpName;
+                    document.getElementById('ui-mvp-score').innerText = lastArc.mvpScore;
+                    document.getElementById('ui-mvp-k').innerText = lastArc.mvpKill;
+                    document.getElementById('ui-mvp-image').style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0) 60%, #0a0a0a 100%), url('${lastArc.mvpImage}')`;
+
+                    // Yeni eklenen arşivleri (8 Mart hariç) DOM'a çizme işlemi
+                    if(!lastArc.title.includes("MART")) {
+                        if(lastArc.leaderboard && lastArc.leaderboard.length > 0) {
+                            let lbHtml = '';
+                            lastArc.leaderboard.slice(0,3).forEach((p, idx) => {
+                                let rankColor = idx === 0 ? "color:var(--neon-orange);" : "color:#444;";
+                                let scoreColor = idx === 0 ? "color:var(--neon-orange);" : "color:#fff;";
+                                lbHtml += `
+                                <div class="lb-item">
+                                    <div class="lb-left">
+                                        <div class="lb-rank" style="${rankColor}">0${idx+1}</div>
+                                        <div class="lb-info">
+                                            <h4>${p.name}</h4>
+                                            <p>K: ${p.k || 0} | D: ${p.d || 0} | A: ${p.a || 0}</p>
+                                        </div>
+                                    </div>
+                                    <div class="lb-right">
+                                        <label>ÇATIŞMA SKORU</label>
+                                        <span style="${scoreColor}">${p.score}</span>
+                                    </div>
+                                </div>`;
+                            });
+                            document.getElementById('arc-leaderboard-container').innerHTML = lbHtml;
+                        }
+
+                        if(lastArc.bracket) {
+                            let buildDM = (arr) => { let h=''; arr.forEach(p => h+=`<li><span>${p.name}</span> <span class="kda-text">${p.k||0}/${p.d||0}/${p.a||0}</span></li>`); return h; };
+                            let buildFin = (arr) => { let h=''; arr.forEach(p => h+=`<li>${p.name} <i class="fa-solid fa-check"></i></li>`); return h; };
+                            let buildTeam = (arr) => { let h=''; arr.forEach(p => h+=`<li><span>${p.name}</span> <span class="kda-text">${p.k||0}/${p.d||0}/${p.a||0}</span></li>`); return h; };
+
+                            document.getElementById('arc-bracket-container').innerHTML = `
+                            <div class="bracket-col elemeler">
+                                <div class="match-box"><div class="match-header">DEATHMATCH: GRUP 1</div><ul class="player-list dm-list">${buildDM(lastArc.bracket.dm1)}</ul></div>
+                                <div class="match-box"><div class="match-header">DEATHMATCH: GRUP 2</div><ul class="player-list dm-list">${buildDM(lastArc.bracket.dm2)}</ul></div>
+                            </div>
+                            <div class="bracket-col yari-final">
+                                <div class="match-box"><div class="match-header" style="color:var(--whatsapp-green);">GRUP 1 FİNALİSTLERİ</div><ul class="player-list winner-list">${buildFin(lastArc.bracket.dm1.filter(p=>p.isWinner))}</ul></div>
+                                <div class="match-box"><div class="match-header" style="color:var(--whatsapp-green);">GRUP 2 FİNALİSTLERİ</div><ul class="player-list winner-list">${buildFin(lastArc.bracket.dm2.filter(p=>p.isWinner))}</ul></div>
+                            </div>
+                            <div class="bracket-col final" style="justify-content: center;">
+                                <div style="color: var(--neon-red); font-family: var(--font-main); font-weight:bold; margin-bottom:10px; font-size:1.4rem;"><i class="fa-solid fa-trophy"></i> BÜYÜK FİNAL (5v5)</div>
+                                <div class="match-box final-box">
+                                    <div class="team-block winner-team-blue"><div class="team-title">ŞAMPİYON TAKIM <i class="fa-solid fa-trophy" style="color:var(--team-blue);"></i></div><ul class="player-list dm-list">${buildTeam(lastArc.bracket.red)}</ul></div>
+                                    <div class="team-block loser-team-red"><div class="team-title">2. TAKIM</div><ul class="player-list dm-list" style="opacity: 0.8;">${buildTeam(lastArc.bracket.blue)}</ul></div>
+                                </div>
+                            </div>`;
+                        }
+
+                        if(lastArc.folderName) {
+                            let fName = lastArc.folderName;
+                            document.getElementById('tour-media-container').innerHTML = `
+                                <div class="media-item"><img src="turnuva_resimler/${fName}/${fName}-galeri/1.jpeg" onclick="openLightbox(this)" onerror="this.parentElement.style.display='none'"></div>
+                                <div class="media-item"><img src="turnuva_resimler/${fName}/${fName}-galeri/2.jpeg" onclick="openLightbox(this)" onerror="this.parentElement.style.display='none'"></div>
+                                <div class="media-item"><img src="turnuva_resimler/${fName}/${fName}-galeri/3.jpeg" onclick="openLightbox(this)" onerror="this.parentElement.style.display='none'"></div>
+                                <div class="media-item"><video src="turnuva_resimler/${fName}/${fName}-galeri/4.mp4" controls preload="metadata" onerror="this.parentElement.style.display='none'"></video></div>
+                            `;
+                        }
+                    }
+                }
+
+                // === 3. ARŞİV KARTLARINI ÇEKME ===
+                if(data.archive && data.archive.length > 0) {
+                    let archiveHtml = '';
+                    data.archive.forEach(item => {
+                        let bgImg = item.mvpImage ? item.mvpImage : 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800';
+                        archiveHtml += `
+                        <div class="archive-card" style="background: linear-gradient(to right, rgba(15,15,15,0.95) 30%, rgba(15,15,15,0.7)), url('${bgImg}') center/cover;">
+                            <div class="ac-date"><i class="fa-regular fa-calendar"></i> ${item.date}</div>
+                            <h3 class="ac-title">${item.title.replace('\n', ' ')}</h3>
+                            <div class="ac-mvp">MVP: ${item.mvpName} (${item.mvpScore} Puan)</div>
+                            <a href="arsiv-detay.html?id=${item.id}" class="ac-link">DETAYLARI GÖR <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>`;
+                    });
+                    document.getElementById('archive-grid-container').innerHTML = archiveHtml;
+                } else {
+                    document.getElementById('archive-grid-container').innerHTML = `<div class="archive-card empty-card"><i class="fa-solid fa-trophy"></i><div style="font-family: var(--font-main); font-weight: bold;">HENÜZ KAYITLI TURNUVA YOK</div></div>`;
+                }
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            await fetchTournamentData();
+            document.getElementById('loading-screen').style.display = 'none';
+
+            if(user) {
+                const headerLoginBtn = document.getElementById('header-login-btn');
+                const mobileLoginBtn = document.getElementById('mobile-login-btn');
+                let outHTML = 'ÇIKIŞ YAP <i class="fa-solid fa-right-from-bracket"></i>';
+                headerLoginBtn.innerHTML = outHTML; headerLoginBtn.style.borderColor = "#444"; mobileLoginBtn.innerHTML = outHTML;
+                const logoutAction = (e) => { e.preventDefault(); signOut(auth).then(() => window.location.reload()); };
+                headerLoginBtn.onclick = logoutAction; mobileLoginBtn.onclick = logoutAction;
+
+                try {
+                    const userDoc = await getDoc(doc(db, "players", user.uid));
+                    if(userDoc.exists()) {
+                        const userData = userDoc.data();
+                        document.getElementById('user-status-container').style.display = "block";
+                        document.getElementById('user-name').innerText = userData.nickname || userData.fullName;
+                        document.getElementById('user-rank').innerText = (userData.totalPoints || 0) + " Puan";
+                        
+                        const mainBtn = document.getElementById('main-action-btn');
+                        if (!mainBtn.disabled || mainBtn.innerHTML.includes("KAYIT OL")) {
+                            if (userData.status === "pending") {
+                                mainBtn.innerHTML = `ÜYELİK ONAYI BEKLENİYOR <i class="fa-solid fa-clock"></i>`;
+                                mainBtn.className = "smart-btn btn-dark";
+                                mainBtn.disabled = true;
+                            } else if (userData.status === "approved") {
+                                if (!userData.tournamentStatus) {
+                                    mainBtn.innerHTML = `TAKIMINI KAYDET (BAŞVUR) <i class="fa-solid fa-chevron-right"></i>`;
+                                    mainBtn.className = "smart-btn btn-red";
+                                    mainBtn.disabled = false;
+                                    mainBtn.onclick = async () => {
+                                        if(confirm("Turnuvaya kayıt olmak istediğinize emin misiniz?")) {
+                                            mainBtn.innerHTML = `BAŞVURULUYOR... <i class="fa-solid fa-spinner fa-spin"></i>`;
+                                            mainBtn.disabled = true;
+                                            try { await updateDoc(doc(db, "players", user.uid), { tournamentStatus: "applied" }); window.location.reload(); } 
+                                            catch (e) { alert("Hata: " + e.message); mainBtn.disabled = false; mainBtn.innerHTML = `TEKRAR DENE <i class="fa-solid fa-rotate-right"></i>`; }
+                                        }
+                                    };
+                                } else if (userData.tournamentStatus === "applied") {
+                                    mainBtn.innerHTML = `ONAY BEKLENİYOR <i class="fa-solid fa-hourglass-half"></i>`;
+                                    mainBtn.className = "smart-btn btn-orange";
+                                    mainBtn.disabled = true;
+                                } else if (userData.tournamentStatus === "approved") {
+                                    mainBtn.innerHTML = `TURNUVADASIN! <i class="fa-solid fa-check"></i>`;
+                                    mainBtn.className = "smart-btn btn-green";
+                                    mainBtn.disabled = true;
+                                }
+                            }
+                        }
+                    }
+                } catch(e) { console.error("Kullanıcı verisi çekilemedi."); }
+            }
+        });
+    </script>
+</body>
+</html>

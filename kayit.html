@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol | Sniper Espor Merkezi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --neon-red: #ff3e3e; --bg-black: #0f0f0f; --card-bg: #151515; --text-white: #ffffff;
+            --font-main: 'Chakra Petch', sans-serif; --font-body: 'Inter', sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); display: flex; justify-content: center; align-items: center; min-height: 100vh; background-image: radial-gradient(circle at top, #1a0808, #0f0f0f); padding: 20px; }
+        
+        .register-box { background: var(--card-bg); width: 100%; max-width: 450px; padding: 40px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 0 40px rgba(255, 62, 62, 0.1); text-align: center; position: relative; overflow: hidden; }
+        .register-box::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--neon-red); box-shadow: 0 0 15px var(--neon-red); }
+        .register-box h2 { font-family: var(--font-main); color: #fff; margin-bottom: 5px; font-size: 2rem; }
+        .register-box p { color: #888; font-size: 0.9rem; margin-bottom: 25px; }
+        
+        .form-group { text-align: left; margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input { width: 100%; padding: 15px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 8px; font-family: var(--font-body); transition: 0.3s; }
+        .form-group input:focus { border-color: var(--neon-red); outline: none; box-shadow: 0 0 10px rgba(255, 62, 62, 0.2); }
+        
+        .note { font-size: 0.75rem; color: #666; margin-top: 5px; display: block; }
+
+        .btn-red { width: 100%; padding: 15px; background: var(--neon-red); color: #fff; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; font-family: var(--font-main); margin-top: 10px; letter-spacing: 1px;}
+        .btn-red:hover { box-shadow: 0 0 20px rgba(255, 62, 62, 0.5); transform: translateY(-2px); }
+        .btn-red:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; }
+        
+        #messageBox { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; font-size: 0.9rem; font-weight: bold; }
+        .success { background: rgba(37, 211, 102, 0.1); color: #25D366; border: 1px solid #25D366; }
+        .error { background: rgba(255, 62, 62, 0.1); color: var(--neon-red); border: 1px solid var(--neon-red); }
+    </style>
+</head>
+<body>
+
+    <div class="register-box">
+        <h2><i class="fa-solid fa-crosshairs" style="color:var(--neon-red);"></i> SNIPER ESPOR</h2>
+        <p>Turnuva sistemine katılmak için kayıt ol.</p>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label>Adınız ve Soyadınız *</label>
+                <input type="text" id="regFullName" placeholder="Örn: Ahmet Yılmaz" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Nickname (İsteğe Bağlı)</label>
+                <input type="text" id="regNickname" placeholder="Örn: Faker">
+                <span class="note">Boş bırakırsanız turnuvalarda Ad Soyad ile görünürsünüz.</span>
+            </div>
+
+            <div class="form-group">
+                <label>E-posta Adresi *</label>
+                <input type="email" id="regEmail" placeholder="ornek@mail.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Şifre *</label>
+                <input type="password" id="regPassword" placeholder="En az 6 karakter" required minlength="6">
+            </div>
+
+            <button type="submit" class="btn-red" id="registerBtn">KAYIT OL</button>
+        </form>
+
+        <div id="messageBox"></div>
+        <div style="margin-top: 20px; font-size: 0.85rem; color:#888;">
+            Zaten üye misin? <a href="index.html" style="color:var(--neon-red); text-decoration:none;">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // Senin mevcut Firebase yapılandırman
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcaSGBZFE--qB9tmWLraB4DkQuf3LtFHA",
+            authDomain: "sniperespormerkezi.firebaseapp.com",
+            projectId: "sniperespormerkezi",
+            storageBucket: "sniperespormerkezi.firebasestorage.app",
+            messagingSenderId: "633581273873",
+            appId: "1:633581273873:web:cab7015b1f49823130c2b0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const registerForm = document.getElementById('registerForm');
+        const registerBtn = document.getElementById('registerBtn');
+        const messageBox = document.getElementById('messageBox');
+
+        function showMessage(msg, type) {
+            messageBox.textContent = msg;
+            messageBox.className = type;
+            messageBox.style.display = 'block';
+        }
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('regFullName').value.trim();
+            const nickname = document.getElementById('regNickname').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> KAYDEDİLİYOR...';
+            messageBox.style.display = 'none';
+
+            try {
+                // 1. Firebase Auth'da kullanıcı oluştur
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Firestore'da veritabanına oyuncu profilini kaydet
+                await setDoc(doc(db, "players", user.uid), {
+                    uid: user.uid,
+                    fullName: fullName,
+                    nickname: nickname || null, // Boşsa null kaydet
+                    email: email,
+                    status: "pending", // Yönetici onayı bekliyor
+                    totalPoints: 0,    // Sniper Rank başlangıç
+                    kda: { kills: 0, deaths: 0, assists: 0 },
+                    createdAt: serverTimestamp()
+                });
+
+                showMessage('Kayıt başarılı! Yönetici onayından sonra giriş yapabileceksiniz.', 'success');
+                registerForm.reset();
+                
+            } catch (error) {
+                console.error("Kayıt Hatası:", error);
+                if (error.code === 'auth/email-already-in-use') {
+                    showMessage('Bu e-posta adresi zaten kullanılıyor.', 'error');
+                } else {
+                    showMessage('Kayıt olurken bir hata oluştu: ' + error.message, 'error');
+                }
+            } finally {
+                registerBtn.disabled = false;
+                registerBtn.innerText = 'KAYIT OL';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Turnuva Arşivi | Sniper Espor</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --neon-red: #ff3e3e; --dark-red: #cc0000; --neon-orange: #ff6b00; --whatsapp-green: #25D366; 
+            --bg-black: #050505; --card-bg: #0f0f0f; --text-white: #ffffff; 
+            --font-main: 'Chakra Petch', sans-serif; --font-body: 'Inter', sans-serif; 
+            --team-red: #ff4d4d; --team-blue: #00d2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; line-height: 1.6; }
+        
+        .back-nav { position: absolute; top: 30px; left: 50px; font-family: var(--font-main); font-weight: bold; font-size: 1.1rem; z-index: 20; }
+        .back-nav a { color: #888; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 8px; border: 1px solid #333;}
+        .back-nav a:hover { color: var(--neon-red); border-color: var(--neon-red); }
+
+        /* DEVASA HERO KISMI (TURNUVA SAYFASININ AYNISI) */
+        .tour-hero { padding: 150px 10% 80px 10%; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; position: relative; background: radial-gradient(circle at top right, rgba(255, 62, 62, 0.05), transparent 50%); border-bottom: 1px solid #111; }
+        .tour-status-badge { background: rgba(255, 107, 0, 0.1); border: 1px solid var(--neon-orange); color: var(--neon-orange); padding: 5px 15px; font-family: var(--font-main); font-weight: bold; font-size: 0.8rem; letter-spacing: 2px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; width: fit-content; border-radius: 3px; }
+        .tour-main-title { font-family: var(--font-main); font-size: clamp(3rem, 6vw, 6rem); font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 20px; color: #fff; text-shadow: 0 0 30px rgba(255, 62, 62, 0.3); }
+        .tour-main-title span { color: var(--neon-red); text-shadow: 0 0 40px rgba(255, 62, 62, 0.8); }
+        .tour-desc { font-size: 1.1rem; color: #aaa; max-width: 600px; margin-bottom: 40px; }
+
+        .info-boxes { display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .info-box { background: #0a0a0a; border: 1px solid #222; padding: 20px 30px; text-align: center; border-radius: 5px; min-width: 140px; }
+        .info-box span { display: block; font-family: var(--font-main); font-size: 2rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 5px; }
+        .info-box label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+
+        /* MVP & LİDERLİK TABLOSU */
+        .mvp-leaderboard-section { display: flex; gap: 50px; padding: 80px 10%; max-width: 1400px; margin: 0 auto; }
+        .half-col { flex: 1; }
+
+        .mvp-card { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 5px; overflow: hidden; position: relative; display: flex; flex-direction: column; min-height: 500px; }
+        .mvp-badge { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); padding: 5px 15px; font-family: var(--font-main); font-size: 0.8rem; letter-spacing: 1px; z-index: 2; font-weight: bold;}
+        .mvp-image-area { flex: 1; background-size: cover; background-position: top center; position: relative; }
+        .mvp-name { position: absolute; bottom: 20px; left: 30px; font-family: var(--font-main); font-size: 2.5rem; font-weight: 900; color: #fff; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,0,0,0.9);}
+        .mvp-stats { display: flex; justify-content: space-between; padding: 25px 30px; background: #0a0a0a; border-top: 1px solid #1a1a1a; }
+        .stat-item label { display: block; color: #666; font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
+        .stat-item span { font-family: var(--font-main); font-size: 1.5rem; color: #fff; font-weight: bold; }
+        .stat-item span.orange-text { color: var(--neon-orange); }
+
+        .lb-list { display: flex; flex-direction: column; gap: 15px; }
+        .lb-item { display: flex; align-items: center; justify-content: space-between; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 15px 20px; border-radius: 5px; }
+        .lb-left { display: flex; align-items: center; gap: 20px; }
+        .lb-rank { font-family: var(--font-main); font-size: 1.5rem; font-weight: 900; color: #444; width: 30px;}
+        .lb-info h4 { font-family: var(--font-main); font-size: 1.2rem; color: #fff; margin-bottom: 2px; }
+        .lb-info p { color: #666; font-size: 0.75rem; }
+        .lb-right { text-align: right; }
+        .lb-right span { font-family: var(--font-main); font-size: 1.2rem; font-weight: bold; color: #fff; }
+
+        /* TABLOLAR */
+        .bracket-section { padding: 60px 10%; background: #0a0a0a; border-top: 1px solid #111; text-align: center; overflow-x: auto; }
+        .section-title { font-family: var(--font-main); font-size: 2.5rem; color: #fff; text-transform: uppercase; margin-bottom: 10px; }
+        .section-title span { color: var(--neon-red); text-shadow: 0 0 20px rgba(255,62,62,0.5); }
+        .section-subtitle { color: #666; font-size: 0.9rem; margin-bottom: 50px; }
+
+        .bracket-container { display: flex; justify-content: center; align-items: center; gap: 40px; min-width: 1000px; margin: 0 auto; padding-bottom: 20px; }
+        .bracket-col { display: flex; flex-direction: column; justify-content: center; gap: 40px; position: relative; }
+        
+        .match-box { background: #0f0f0f; border: 1px solid #222; width: 310px; border-radius: 5px; position: relative; }
+        .match-header { background: #151515; padding: 10px 15px; font-size: 0.8rem; color: #aaa; text-align: center; font-family: var(--font-main); border-bottom: 1px solid #222; font-weight: bold; letter-spacing: 1px; border-radius: 4px 4px 0 0;}
+        .player-list { list-style: none; padding: 0; margin: 0; background: #080808; border-radius: 0 0 4px 4px; overflow: hidden;}
+        .player-list li { padding: 8px 15px; font-size: 0.85rem; color: #666; border-bottom: 1px solid #111; font-family: var(--font-body); text-align: left; display: flex; justify-content: space-between; align-items: center;}
+        
+        .dm-list li { color: #fff; }
+        .kda-text { color: #888; font-size: 0.75rem; font-family: var(--font-main); letter-spacing: 1px; font-weight: bold; }
+        
+        .winner-list li { color: #fff; }
+        .winner-list li i { color: var(--whatsapp-green); font-size: 0.85rem;}
+
+        .final-box { border: 2px solid var(--neon-red); width: 350px; border-radius: 5px;}
+        .team-title { font-family: var(--font-main); font-size: 1.1rem; color: #fff; padding: 15px; text-align: center; font-weight: bold; letter-spacing: 1px;}
+        .winner-team-blue .team-title { background: rgba(0, 210, 255, 0.1); border-bottom: 2px solid var(--team-blue); color: var(--team-blue); border-radius: 4px 4px 0 0;}
+        .loser-team-red .team-title { background: rgba(255, 77, 77, 0.1); border-bottom: 2px solid var(--team-red); color: var(--team-red); border-top: 1px dashed #333;}
+        
+        .bracket-col.elemeler::after { content: ''; position: absolute; right: -20px; top: 25%; height: 50%; width: 2px; background: #444; z-index: 0; }
+        .bracket-col.elemeler .match-box::after { content: ''; position: absolute; right: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+        .bracket-col.yari-final::before { content: ''; position: absolute; left: -20px; top: 50%; height: 2px; width: 20px; background: #444; z-index: 0; }
+        .bracket-col.yari-final::after { content: ''; position: absolute; right: -20px; top: 25%; height: 50%; width: 2px; background: #444; z-index: 0; }
+        .bracket-col.yari-final .match-box::after { content: ''; position: absolute; right: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+        .bracket-col.final::before { content: ''; position: absolute; left: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+
+        /* MEDYA GALERİSİ */
+        .media-section { padding: 80px 10%; background: #080808; border-top: 1px solid #111; text-align: center; }
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+        .media-item { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #1a1a1a; aspect-ratio: 16/9; cursor: pointer; transition: 0.3s; background: #0f0f0f; display: flex; justify-content: center; align-items: center;}
+        .media-item:hover { border-color: var(--neon-red); transform: scale(1.03); z-index: 2; box-shadow: 0 10px 30px rgba(255, 62, 62, 0.2); }
+        .media-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
+        .media-item video { width: 100%; height: 100%; object-fit: cover; outline: none; border: none; }
+        .media-item:hover img { opacity: 1; }
+
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.95); z-index: 99999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(5px);}
+        .lightbox.active { display: flex; opacity: 1; }
+        .lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 0 50px rgba(255, 62, 62, 0.4); border: 2px solid var(--neon-red); }
+        .lightbox-close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 2.5rem; cursor: pointer; transition: 0.3s; }
+        .lightbox-close:hover { color: var(--neon-red); transform: scale(1.1); }
+
+        #loading-screen { position: fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:9999; display:flex; flex-direction:column; gap: 20px; justify-content:center; align-items:center; font-family:var(--font-main); font-size:1.2rem; color:var(--neon-red); letter-spacing: 2px;}
+        footer { text-align: center; padding: 40px; border-top: 1px solid #111; color: #444; background: #000; font-size: 0.85rem; }
+
+        @media (max-width: 900px) { .mvp-leaderboard-section { flex-direction: column; } }
+        @media (max-width: 768px) {
+            .back-nav { top: 20px; left: 20px; font-size: 0.9rem; } 
+            .tour-main-title { font-size: 3rem; }
+            .info-boxes { flex-direction: row; gap: 10px; justify-content: flex-start; } .info-box { padding: 15px 20px; min-width: auto; flex: 1; } .info-box span { font-size: 1.5rem; }
+            .bracket-section, .mvp-leaderboard-section, .media-section { padding: 40px 20px; } 
+            .lightbox-close { top: 10px; right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <i class="fa-solid fa-crosshairs fa-spin" style="font-size: 3rem;"></i>
+        <div>ARŞİV ÇÖZÜMLENİYOR...</div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <i class="fa-solid fa-xmark lightbox-close" onclick="closeLightbox()"></i>
+        <img src="" id="lightbox-img" alt="Büyütülmüş Resim">
+    </div>
+
+    <div class="back-nav">
+        <a href="turnuva.html"><i class="fa-solid fa-arrow-left"></i> TURNUVALARA DÖN</a>
+    </div>
+
+    <section class="tour-hero">
+        <div class="tour-status-badge mvp-badge"><i class="fa-solid fa-clock-rotate-left" style="animation:none;"></i> <span>GEÇMİŞ TURNUVA</span></div>
+        
+        <h1 class="tour-main-title" id="arc-title">YÜKLENİYOR...</h1>
+        <p class="tour-desc" id="arc-desc">Arşiv verisi çözümleniyor...</p>
+        
+        <div class="info-boxes">
+            <div class="info-box">
+                <span id="arc-date-day">--</span>
+                <label>TARİH</label>
+            </div>
+            <div class="info-box">
+                <span id="arc-date-time">--:--</span>
+                <label>SAAT</label>
+            </div>
+            <div class="info-box">
+                <span>Tamamlandı</span>
+                <label>DURUM</label>
+            </div>
+        </div>
+    </section>
+
+    <section class="mvp-leaderboard-section">
+        <div class="half-col">
+            <h2 class="section-title" style="text-align: left;"><i class="fa-solid fa-bullseye" style="color:var(--neon-red); font-size:1.5rem; margin-right:10px;"></i> TURNUVA <span>MVP'Sİ</span></h2>
+            
+            <div class="mvp-card">
+                <div class="mvp-badge">ELİT STATÜ</div>
+                <div class="mvp-image-area" id="arc-mvp-image">
+                    <div class="mvp-name" id="arc-mvp-name">--</div>
+                </div>
+                <div class="mvp-stats">
+                    <div class="stat-item"><label>ÇATIŞMA SKORU</label><span id="arc-mvp-score">0</span></div>
+                    <div class="stat-item"><label>ÖLDÜRME (KİLL)</label><span id="arc-mvp-k">0</span></div>
+                    <div class="stat-item"><label>ÖLÜM (DEATH)</label><span class="orange-text" id="arc-mvp-d">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="half-col">
+            <h2 class="section-title" style="text-align: left;"><i class="fa-solid fa-chart-line" style="color:var(--neon-red); font-size:1.5rem; margin-right:10px;"></i> EN İYİ <span>10 (FİNALİSTLER)</span></h2>
+            <div class="lb-list" id="arc-leaderboard-container">
+                </div>
+        </div>
+    </section>
+
+    <section class="bracket-section" id="arc-bracket-section" style="display:none;">
+        <h2 class="section-title">TURNUVA <span>TABLOSU</span></h2>
+        <p class="section-subtitle">Bu turnuvada yaşanan eşleşmeler ve sonuçlar.</p>
+
+        <div class="bracket-container">
+            <div class="bracket-col elemeler">
+                <div class="match-box">
+                    <div class="match-header">DEATHMATCH: GRUP 1</div>
+                    <ul class="player-list dm-list" id="arc-dm1-list"></ul>
+                </div>
+                <div class="match-box">
+                    <div class="match-header">DEATHMATCH: GRUP 2</div>
+                    <ul class="player-list dm-list" id="arc-dm2-list"></ul>
+                </div>
+            </div>
+
+            <div class="bracket-col yari-final">
+                <div class="match-box">
+                    <div class="match-header" style="color:var(--whatsapp-green);">GRUP 1 FİNALİSTLERİ</div>
+                    <ul class="player-list winner-list" id="arc-fin1-list"></ul>
+                </div>
+                <div class="match-box">
+                    <div class="match-header" style="color:var(--whatsapp-green);">GRUP 2 FİNALİSTLERİ</div>
+                    <ul class="player-list winner-list" id="arc-fin2-list"></ul>
+                </div>
+            </div>
+
+            <div class="bracket-col final" style="justify-content: center;">
+                <div style="color: var(--neon-red); font-family: var(--font-main); font-weight:bold; margin-bottom:10px; font-size:1.4rem;"><i class="fa-solid fa-trophy"></i> BÜYÜK FİNAL (5v5)</div>
+                <div class="match-box final-box">
+                    <div class="team-block winner-team-blue">
+                        <div class="team-title">ŞAMPİYON TAKIM <i class="fa-solid fa-trophy" style="color:var(--team-blue);"></i></div>
+                        <ul class="player-list dm-list" id="arc-red-list"></ul>
+                    </div>
+                    <div class="team-block loser-team-red">
+                        <div class="team-title">2. TAKIM</div>
+                        <ul class="player-list dm-list" style="opacity: 0.8;" id="arc-blue-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="media-section" id="arc-media-section" style="display:none;">
+        <div class="section-header">
+            <h2 class="section-title">O GÜNDEN <span>KARELER</span></h2>
+            <p class="section-subtitle">Turnuvanın en heyecanlı anları.</p>
+        </div>
+        <div class="media-grid" id="arc-media-container"></div>
+    </section>
+
+    <footer>
+        <p>© 2026 Sniper Espor Merkezi. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        function openLightbox(imgEl) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = imgEl.src;
+            lb.classList.add('active');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+        document.getElementById('lightbox').addEventListener('click', function(e) { if(e.target === this) closeLightbox(); });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcaSGBZFE--qB9tmWLraB4DkQuf3LtFHA",
+            authDomain: "sniperespormerkezi.firebaseapp.com",
+            projectId: "sniperespormerkezi",
+            storageBucket: "sniperespormerkezi.firebasestorage.app",
+            messagingSenderId: "633581273873",
+            appId: "1:633581273873:web:cab7015b1f49823130c2b0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadArchiveData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const archiveId = urlParams.get('id');
+
+            if(!archiveId) { alert("Turnuva ID bulunamadı."); window.location.href = "turnuva.html"; return; }
+
+            const docSnap = await getDoc(doc(db, "siteData", "v2Data"));
+            if (docSnap.exists() && docSnap.data().archive) {
+                const archiveData = docSnap.data().archive.find(a => a.id === archiveId);
+                
+                if(archiveData) {
+                    // ÜST BİLGİLER (Hero Kısmı)
+                    let formattedTitle = archiveData.title.replace(" VALORANT", "<br><span>VALORANT").replace(" TURNUVASI", " TURNUVASI</span>");
+                    document.getElementById('arc-title').innerHTML = formattedTitle;
+                    document.getElementById('arc-desc').innerHTML = `En Değerli Oyuncu (MVP): ${archiveData.mvpName} (K:${archiveData.mvpKill})`;
+                    
+                    document.getElementById('arc-date-day').innerText = archiveData.date || '--';
+                    document.getElementById('arc-date-time').innerText = archiveData.time || '--:--';
+
+                    // MVP KARTI
+                    document.getElementById('arc-mvp-name').innerText = archiveData.mvpName;
+                    document.getElementById('arc-mvp-score').innerText = archiveData.mvpScore;
+                    document.getElementById('arc-mvp-k').innerText = archiveData.mvpKill;
+                    document.getElementById('arc-mvp-image').style.backgroundImage = `linear-gradient(to bottom, rgba(0,0,0,0) 60%, #0a0a0a 100%), url('${archiveData.mvpImage}')`;
+
+                    // LİDERLİK TABLOSU
+                    if(archiveData.leaderboard && archiveData.leaderboard.length > 0) {
+                        let lbHtml = '';
+                        archiveData.leaderboard.forEach((p, idx) => {
+                            let rankColor = idx === 0 ? "color:var(--neon-orange);" : "color:#444;";
+                            let scoreColor = idx === 0 ? "color:var(--neon-orange);" : "color:#fff;";
+                            lbHtml += `
+                            <div class="lb-item">
+                                <div class="lb-left">
+                                    <div class="lb-rank" style="${rankColor}">0${idx+1}</div>
+                                    <div class="lb-info">
+                                        <h4>${p.name}</h4>
+                                        <p>K: ${p.k||0} | D: ${p.d||0} | A: ${p.a||0}</p>
+                                    </div>
+                                </div>
+                                <div class="lb-right"><span style="${scoreColor}">${p.score} Puan</span></div>
+                            </div>`;
+                        });
+                        document.getElementById('arc-leaderboard-container').innerHTML = lbHtml;
+                    } else {
+                        document.getElementById('arc-leaderboard-container').innerHTML = `<p style="color:#666; padding:20px;">Bu turnuvaya ait detaylı skor tablosu bulunmamaktadır.</p>`;
+                    }
+
+                    // BRACKET
+                    if(archiveData.bracket) {
+                        document.getElementById('arc-bracket-section').style.display = 'block';
+                        
+                        let buildDM = (arr) => { let h=''; arr.forEach(p => h+=`<li><span>${p.name}</span> <span class="kda-text">${p.k||0}/${p.d||0}/${p.a||0}</span></li>`); return h; };
+                        let buildFin = (arr) => { let h=''; arr.forEach(p => h+=`<li>${p.name} <i class="fa-solid fa-check"></i></li>`); return h; };
+                        let buildTeam = (arr) => { let h=''; arr.forEach(p => h+=`<li><span>${p.name}</span> <span class="kda-text">${p.k||0}/${p.d||0}/${p.a||0}</span></li>`); return h; };
+
+                        if(archiveData.bracket.dm1) {
+                            document.getElementById('arc-dm1-list').innerHTML = buildDM(archiveData.bracket.dm1);
+                            document.getElementById('arc-fin1-list').innerHTML = buildFin(archiveData.bracket.dm1.filter(p => p.isWinner));
+                        }
+                        if(archiveData.bracket.dm2) {
+                            document.getElementById('arc-dm2-list').innerHTML = buildDM(archiveData.bracket.dm2);
+                            document.getElementById('arc-fin2-list').innerHTML = buildFin(archiveData.bracket.dm2.filter(p => p.isWinner));
+                        }
+                        if(archiveData.bracket.red) document.getElementById('arc-red-list').innerHTML = buildTeam(archiveData.bracket.red);
+                        if(archiveData.bracket.blue) document.getElementById('arc-blue-list').innerHTML = buildTeam(archiveData.bracket.blue);
+                    }
+
+                    // MEDYA GALERİSİ
+                    if(archiveData.folderName) {
+                        document.getElementById('arc-media-section').style.display = 'block';
+                        let fName = archiveData.folderName;
+                        let mHtml = `
+                            <div class="media-item"><img src="turnuva_resimler/${fName}/${fName}-galeri/1.jpeg" onclick="openLightbox(this)" onerror="this.parentElement.style.display='none'"></div>
+                            <div class="media-item"><img src="turnuva_resimler/${fName}/${fName}-galeri/2.jpeg" onclick="openLightbox(this)" onerror="this.parentElement.style.display='none'"></div>
+                            <div class="media-item"><img src="turnuva_resimler/${fName}/${fName}-galeri/3.jpeg" onclick="openLightbox(this)" onerror="this.parentElement.style.display='none'"></div>
+                            <div class="media-item"><video src="turnuva_resimler/${fName}/${fName}-galeri/4.mp4" controls preload="metadata" onerror="this.parentElement.style.display='none'"></video></div>
+                        `;
+                        document.getElementById('arc-media-container').innerHTML = mHtml;
+                    }
+
+                    document.getElementById('loading-screen').style.display = 'none';
+                } else {
+                    alert("Arşiv bulunamadı!");
+                    window.location.href = "turnuva.html";
+                }
+            } else {
+                alert("Veritabanına bağlanılamadı.");
+            }
+        }
+
+        loadArchiveData();
+    </script>
+</body>
+</html>

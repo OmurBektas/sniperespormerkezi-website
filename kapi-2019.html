@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim | Sniper Espor Merkezi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.postimg.cc/Fzn4W2w9/Eren-Internet-Cafe-400.png" type="image/png">
+    
+    <style>
+        :root {
+            --neon-red: #ff3e3e; --neon-orange: #ff6b00; --whatsapp-green: #25D366; --team-blue: #00d2ff; --tour-blue: #00e5ff;
+            --bg-black: #0f0f0f; --card-bg: #151515; --text-white: #ffffff;
+            --font-main: 'Chakra Petch', sans-serif; --font-body: 'Inter', sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; }
+        
+        #login-screen { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-image: radial-gradient(circle at top, #1a0808, #0f0f0f); padding: 20px; }
+        .login-box { background: var(--card-bg); width: 100%; max-width: 400px; padding: 40px; border-radius: 20px; border: 1px solid #333; box-shadow: 0 0 40px rgba(255, 62, 62, 0.1); text-align: center; }
+        .login-box h2 { font-family: var(--font-main); color: var(--neon-red); margin-bottom: 20px; }
+        .login-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 8px; font-family: var(--font-body); }
+        .btn-red { width: 100%; padding: 15px; background: var(--neon-red); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: var(--font-main); }
+        .btn-red:hover { box-shadow: 0 0 20px rgba(255, 62, 62, 0.5); }
+
+        #dashboard-screen { display: none; height: 100vh; overflow: hidden; }
+        .admin-header { background: #080808; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .admin-header h1 { font-family: var(--font-main); font-size: 1.5rem; color: #fff; margin:0; }
+        .admin-header h1 i { color: var(--neon-red); }
+        
+        .header-buttons { display: flex; gap: 10px; align-items: center; }
+        .btn-outline { color: #aaa; text-decoration: none; border: 1px solid #555; padding: 10px 15px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px; cursor: pointer; background: transparent; font-family: var(--font-main);}
+        .btn-outline:hover { color: #fff; border-color: #fff; }
+        
+        .dashboard-layout { display: flex; height: calc(100vh - 75px); transition: all 0.3s ease; }
+        
+        .editor-section { flex: 0 0 50%; max-width: 50%; overflow-y: auto; padding: 30px; background: #0f0f0f; border-right: 1px solid #333; transition: all 0.4s ease; position: relative;}
+        .editor-section.collapsed { flex: 0 0 0%; max-width: 0%; padding: 0; border: none; opacity: 0; overflow: hidden; }
+        .editor-section::-webkit-scrollbar { width: 8px; }
+        .editor-section::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .cat-box { background: #151515; border: 1px solid #333; border-radius: 15px; padding: 25px 15px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .cat-box i { font-size: 2.5rem; color: var(--neon-red); margin-bottom: 10px; display: block; transition: 0.3s;}
+        .cat-box h3 { font-family: var(--font-main); color: #fff; font-size: 1.1rem; margin: 0; letter-spacing: 1px; }
+        .cat-box:hover { border-color: var(--neon-red); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255, 62, 62, 0.15); }
+        .cat-box:hover i { transform: scale(1.1); }
+
+        .player-item { background: #1a1a1a; border: 1px solid #333; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .player-info strong { color: #fff; font-size: 1.1rem; }
+        .player-info span { color: #888; font-size: 0.9rem; margin-left: 10px; }
+        .player-actions button { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: var(--font-main); transition: 0.3s; margin-left: 5px;}
+        .btn-approve { background: rgba(37, 211, 102, 0.1); color: #25D366; border: 1px solid #25D366 !important; }
+        .btn-approve:hover { background: #25D366; color: #000; }
+        .btn-reject { background: rgba(255, 62, 62, 0.1); color: var(--neon-red); border: 1px solid var(--neon-red) !important; }
+        .btn-reject:hover { background: var(--neon-red); color: #fff; }
+        .btn-tour-approve { background: rgba(0, 229, 255, 0.1); color: var(--tour-blue); border: 1px solid var(--tour-blue) !important; }
+        .btn-tour-approve:hover { background: var(--tour-blue); color: #000; }
+
+        .editor-top-bar { display: none; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #333; position: sticky; top: -30px; background: rgba(15,15,15,0.95); z-index: 20; padding: 15px; border-radius: 10px;}
+        .btn-back { background: #222; color: #fff; border: 1px solid #444; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: var(--font-main); font-weight: bold; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+        .btn-back:hover { background: var(--neon-red); border-color: var(--neon-red); }
+        
+        .lang-tabs { display: flex; gap: 10px; }
+        .lang-tab { padding: 10px 20px; text-align: center; font-weight: bold; font-family: var(--font-main); cursor: pointer; border-radius: 5px; transition: 0.3s; background: transparent; color: #888; border: 1px solid transparent; }
+        .lang-tab.active { background: #222; color: #fff; border-color: #444; }
+        
+        .editor-pane { display: none; }
+        
+        .wizard-nav { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap;}
+        .wizard-btn { flex: 1; min-width: 120px; padding: 15px 10px; background: #111; color: #888; border: 1px solid #333; border-radius: 8px; font-family: var(--font-main); font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 0.9rem;}
+        .wizard-btn.active { background: var(--neon-red); color: #fff; border-color: var(--neon-red); }
+        .wizard-step { display: none; }
+        .wizard-step.active-step { display: block; }
+
+        .admin-card { background: #151515; border: 1px solid #2a2a2a; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .admin-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .admin-card-header h3 { font-family: var(--font-main); color: var(--neon-orange); margin:0;}
+        .move-btns button { background: #222; border: 1px solid #444; color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-left: 5px; transition:0.3s;}
+        .move-btns button:hover { background: #444; }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 0.8rem; color: #aaa; margin-bottom: 5px; text-transform: uppercase; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; color: #fff; border-radius: 5px; font-family: var(--font-body); transition: 0.3s; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--neon-red); outline: none; box-shadow: 0 0 10px rgba(255, 62, 62, 0.2); }
+
+        .draft-btn { background: #222; border: 1px solid var(--neon-orange); color: var(--neon-orange); padding: 12px 20px; border-radius: 8px; font-family: var(--font-main); font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; width: 100%; text-align: center; margin-bottom: 15px; }
+        .draft-btn:hover { background: var(--neon-orange); color: #000; box-shadow: 0 0 20px rgba(255, 107, 0, 0.4); }
+        
+        .dm-group { background: #0a0a0a; border: 1px solid #333; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .dm-group h4 { color: #888; margin-bottom: 10px; font-family: var(--font-main); border-bottom: 1px dashed #333; padding-bottom: 5px; }
+        .dm-player { display: flex; align-items: center; justify-content: space-between; padding: 8px; border-bottom: 1px solid #1a1a1a; }
+        .dm-player label { cursor: pointer; display: flex; align-items: center; gap: 10px; color: #ccc; width: 100%; }
+        .dm-player input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--neon-red); }
+        
+        .team-container { display: flex; flex-direction: column; gap: 20px; margin-bottom: 20px; }
+        .team-box { flex: 1; background: #0a0a0a; border-radius: 10px; padding: 15px; border: 2px solid #333; }
+        .team-red { border-color: var(--neon-red); }
+        .team-blue { border-color: var(--team-blue); }
+        .team-box h3 { text-align: center; margin-bottom: 15px; font-family: var(--font-main); }
+        .team-red h3 { color: var(--neon-red); }
+        .team-blue h3 { color: var(--team-blue); }
+        
+        .score-row { display: flex; justify-content: space-between; align-items: center; background: #151515; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #222; }
+        .score-name { font-weight: bold; font-size: 0.95rem; width: 40%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .score-inputs { display: flex; gap: 10px; width: 60%; justify-content: flex-end; }
+        .kda-box { display: flex; align-items: center; background: #000; border-radius: 5px; border: 1px solid #333; overflow: hidden; }
+        .kda-box span { font-size: 0.7rem; color: #888; padding: 0 5px; font-weight: bold; }
+        .kda-btn { background: #222; color: #fff; border: none; padding: 5px 10px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .kda-btn:hover { background: #444; }
+        .kda-box input { width: 30px; text-align: center; background: #000; border: none; color: #fff; font-weight: bold; font-family: var(--font-main); appearance: textfield; -moz-appearance: textfield; }
+        .kda-box input::-webkit-outer-spin-button, .kda-box input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .preview-section { flex: 1; overflow-y: auto; padding: 30px 50px; background: #050505; position: relative; transition: all 0.4s ease; }
+        .preview-section::-webkit-scrollbar { width: 8px; }
+        .preview-section::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        .preview-title { font-family: var(--font-main); color: #555; text-align: center; margin-bottom: 30px; letter-spacing: 2px; position: sticky; top: -30px; background: rgba(5,5,5,0.9); padding: 10px; z-index: 10; border-radius: 10px;}
+        
+        #preview-area { max-width: 1200px; margin: 0 auto; width: 100%; padding-bottom: 50px; }
+
+        .editor-container.mode-tr .lang-en { display: none; }
+        .editor-container.mode-en .lang-tr { display: none; }
+
+        @media (max-width: 1200px) {
+            .admin-header { flex-direction: column; gap:15px; }
+            .dashboard-layout { flex-direction: column; height: auto; }
+            .editor-section { max-width: 100%; border-right: none; border-bottom: 2px solid var(--neon-red); padding: 15px; }
+            .preview-section { padding: 15px; }
+            #dashboard-screen { overflow: auto; }
+            .cat-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2><i class="fa-solid fa-lock"></i> SİSTEME GİRİŞ</h2>
+            <input type="email" id="emailInput" placeholder="E-posta Adresi">
+            <input type="password" id="passwordInput" placeholder="Şifre">
+            <button class="btn-red" id="loginBtn" onclick="loginUser()">GİRİŞ YAP</button>
+            <p id="loginError" style="color:var(--neon-red); margin-top:10px; display:none; font-size:0.9rem;">Hatalı bilgi!</p>
+        </div>
+    </div>
+
+    <div id="dashboard-screen">
+        <div class="admin-header">
+            <h1><i class="fa-solid fa-crosshairs"></i> YÖNETİM PANELİ</h1>
+            <div class="header-buttons">
+                <a href="index.html" target="_blank" class="btn-outline" title="Ana Sayfaya Git"><i class="fa-solid fa-globe"></i> SİTEYE GİT</a>
+                <button onclick="toggleEditor()" id="toggleEditorBtn" class="btn-outline" style="background:#222;"><i class="fa-solid fa-expand"></i> ÖNİZLEMEYİ BÜYÜT</button>
+                <button onclick="saveToFirebase()" class="btn-red" id="saveGlobalBtn" style="padding:10px 20px; width:auto;"><i class="fa-solid fa-cloud-arrow-up"></i> YAYINLA</button>
+                <button onclick="logoutUser()" class="btn-outline" title="Çıkış Yap"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+        </div>
+
+        <div class="dashboard-layout">
+            
+            <div class="editor-section" id="editor-panel">
+                
+                <div id="category-menu">
+                    <h2 style="font-family:var(--font-main); color:#fff; margin-bottom:20px; text-align:center;">DÜZENLENECEK BÖLÜMÜ SEÇİN</h2>
+                    <div class="cat-grid">
+                        <div class="cat-box" onclick="openCategory('players')" style="border-color: var(--whatsapp-green);">
+                            <i class="fa-solid fa-user-check" style="color: var(--whatsapp-green);"></i>
+                            <h3>1. Üyelik Onayları</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('tour_wizard')" style="border-color: #ff00ff;">
+                            <i class="fa-solid fa-trophy" style="color: #ff00ff;"></i>
+                            <h3>2. Turnuva Yönetimi</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('archive')" style="border-color: #ffd700;">
+                            <i class="fa-solid fa-crown" style="color: #ffd700;"></i>
+                            <h3>3. Geçmiş Arşiv Ekle</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('sys')" style="border-color: #00e5ff;">
+                            <i class="fa-solid fa-desktop" style="color: #00e5ff;"></i>
+                            <h3>4. Sistemler</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('rac')" style="border-color: #ff3e3e;">
+                            <i class="fa-solid fa-gauge-high" style="color: #ff3e3e;"></i>
+                            <h3>5. Direksiyon Seti</h3>
+                        </div>
+                        <div class="cat-box" onclick="openCategory('gal')" style="border-color: #ff6b00;">
+                            <i class="fa-solid fa-images" style="color: #ff6b00;"></i>
+                            <h3>6. Galeri Yazıları</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="editor-contents" style="display:none;">
+                    <div class="editor-top-bar">
+                        <button class="btn-back" onclick="closeCategory()"><i class="fa-solid fa-arrow-left"></i> Geri Dön</button>
+                        <div class="lang-tabs" id="lang-tabs-container">
+                            <div class="lang-tab active" id="tab-tr" onclick="switchLang('tr')">TR</div>
+                            <div class="lang-tab" id="tab-en" onclick="switchLang('en')">EN</div>
+                        </div>
+                    </div>
+
+                    <div id="edit-players" class="editor-pane admin-card">
+                        <h3 style="color:var(--neon-orange); margin-bottom: 20px; font-family: var(--font-main); border-bottom: 1px solid #333; padding-bottom:10px;">
+                            <i class="fa-solid fa-user-clock"></i> ONAY BEKLEYEN ÜYELİKLER
+                        </h3>
+                        <div id="pending-players-list"></div>
+                        
+                        <h3 style="color:var(--whatsapp-green); margin-bottom: 20px; margin-top:40px; font-family: var(--font-main); border-bottom: 1px solid #333; padding-bottom:10px;">
+                            <i class="fa-solid fa-user-check"></i> ONAYLI KAFE ÜYELERİ
+                        </h3>
+                        <div id="approved-players-list"></div>
+                    </div>
+
+                    <div id="edit-tour_wizard" class="editor-pane admin-card editor-container mode-tr">
+                        <div class="wizard-nav">
+                            <button onclick="switchTourStep('step-settings')" id="btn-step-settings" class="wizard-btn active">1. BAŞLIK & KAYIT AÇ</button>
+                            <button onclick="switchTourStep('step-apps')" id="btn-step-apps" class="wizard-btn">2. BAŞVURULARI ONAYLA</button>
+                            <button onclick="switchTourStep('step-match')" id="btn-step-match" class="wizard-btn">3. KURA & SKOR (BİTİR)</button>
+                        </div>
+
+                        <div id="step-settings" class="wizard-step active-step">
+                            
+                            <div class="form-group" style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px; border: 1px solid var(--whatsapp-green); margin-bottom:30px;">
+                                <label style="color:var(--whatsapp-green); font-weight:bold; font-size:1rem;"><i class="fa-solid fa-power-off"></i> KAYIT ŞALTERİ (AÇIK / KAPALI)</label>
+                                <select id="t_regStatus" onchange="uTour('regStatus', this.value)" style="border-color:var(--whatsapp-green); background:#000; margin-top:10px;">
+                                    <option value="closed">KAPALI (Buton Gri ve Kilitli Olur)</option>
+                                    <option value="open">AÇIK (Buton Tıklanabilir Kırmızı Olur, Kayıt Alınır)</option>
+                                </select>
+                            </div>
+
+                            <h3 style="color:var(--neon-orange); margin-bottom:15px; font-family:var(--font-main);">1. TURNUVA SAYFASI (turnuva.html)</h3>
+                            <p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Turnuva Merkezindeki devasa ana başlığı buradan dilediğiniz gibi değiştirebilirsiniz.</p>
+                            
+                            <div class="lang-tr">
+                                <div class="form-group"><label>Üst Kırmızı Etiket (Örn: SON ŞAMPİYON veya KAYITLAR AÇIK)</label><input type="text" id="t_tagTR" oninput="uTour('tagTR', this.value)"></div>
+                                <div class="form-group"><label>Devasa Ana Başlık (Örn: 8 MART 2026 VALORANT TURNUVASI)</label><textarea rows="2" id="t_titleTR" oninput="uTour('titleTR', this.value)"></textarea></div>
+                                <div class="form-group"><label>Alt Açıklama (Örn: MVP: 愛してます (K:24 D:15) veya Şampiyonluk zamanı!)</label><textarea rows="2" id="t_descTR" oninput="uTour('descTR', this.value)"></textarea></div>
+                                <div class="form-group"><label>Durum / Ücret Kutusu (Örn: Tamamlandı veya 50 TL)</label><input type="text" id="t_entryTR" oninput="uTour('entryTR', this.value)"></div>
+                                <div class="form-group"><label>Buton Yazısı (Örn: YENİ TURNUVA BEKLENİYOR veya KAYIT OL)</label><input type="text" id="t_btnTR" oninput="uTour('btnTR', this.value)"></div>
+                            </div>
+                            <div class="lang-en">
+                                <div class="form-group"><label>Üst Kırmızı Etiket (EN)</label><input type="text" id="t_tagEN" oninput="uTour('tagEN', this.value)"></div>
+                                <div class="form-group"><label>Devasa Ana Başlık (EN)</label><textarea rows="2" id="t_titleEN" oninput="uTour('titleEN', this.value)"></textarea></div>
+                                <div class="form-group"><label>Alt Açıklama (EN)</label><textarea rows="2" id="t_descEN" oninput="uTour('descEN', this.value)"></textarea></div>
+                                <div class="form-group"><label>Durum / Ücret Kutusu (EN)</label><input type="text" id="t_entryEN" oninput="uTour('entryEN', this.value)"></div>
+                                <div class="form-group"><label>Buton Yazısı (EN)</label><input type="text" id="t_btnEN" oninput="uTour('btnEN', this.value)"></div>
+                            </div>
+                            <div class="form-group"><label>Ortak Tarih / Saat (Örn: 08.03.2026 - 15:00)</label><input type="text" id="t_date" oninput="uTour('date', this.value)"></div>
+                            
+                            <hr style="border-color:#333; margin:30px 0;">
+
+                            <h3 style="color:var(--neon-orange); margin-bottom:15px; font-family:var(--font-main);">2. VİTRİN KARTI (index.html)</h3>
+                            <p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Ana sayfadaki turnuva tanıtım kartının yazılarını buradan bağımsız olarak ayarlayabilirsiniz.</p>
+                            
+                            <div class="lang-tr">
+                                <div class="form-group"><label>Kart Üst Etiketi (Örn: YENİ)</label><input type="text" id="it_tagTR" oninput="uIndexTour('tagTR', this.value)"></div>
+                                <div class="form-group"><label>Kart Başlığı (Örn: 11 NİSAN TURNUVASINA KATIL)</label><textarea rows="2" id="it_titleTR" oninput="uIndexTour('titleTR', this.value)"></textarea></div>
+                                <div class="form-group"><label>Kart Açıklaması (Örn: Kayıtlar başladı, şampiyon sen ol!)</label><textarea rows="2" id="it_descTR" oninput="uIndexTour('descTR', this.value)"></textarea></div>
+                            </div>
+                            <div class="lang-en">
+                                <div class="form-group"><label>Kart Üst Etiketi (EN)</label><input type="text" id="it_tagEN" oninput="uIndexTour('tagEN', this.value)"></div>
+                                <div class="form-group"><label>Kart Başlığı (EN)</label><textarea rows="2" id="it_titleEN" oninput="uIndexTour('titleEN', this.value)"></textarea></div>
+                                <div class="form-group"><label>Kart Açıklaması (EN)</label><textarea rows="2" id="it_descEN" oninput="uIndexTour('descEN', this.value)"></textarea></div>
+                            </div>
+
+                            <div style="display:flex; gap:10px; margin-top:30px;">
+                                <button onclick="saveToFirebase()" class="btn-red" style="flex:1;"><i class="fa-solid fa-cloud-arrow-up"></i> YAZILARI YAYINLA</button>
+                                <button onclick="clearApplications()" class="btn-outline" style="flex:1; justify-content:center; color:var(--neon-red); border-color:var(--neon-red);" title="Kutudaki yazıları DOKUNMAZ. Sadece oyuncu başvurularını siler."><i class="fa-solid fa-trash"></i> BAŞVURULARI SIFIRLA</button>
+                            </div>
+                        </div>
+
+                        <div id="step-apps" class="wizard-step">
+                            <h3 style="color:var(--tour-blue); margin-bottom: 20px; font-family: var(--font-main); border-bottom: 1px solid #333; padding-bottom:10px;">
+                                <i class="fa-solid fa-ticket-simple"></i> BEKLEYEN BAŞVURULAR
+                            </h3>
+                            <div id="pending-tour-apps-list"></div>
+                            
+                            <h3 style="color:var(--whatsapp-green); margin-bottom: 20px; margin-top:40px; font-family: var(--font-main); border-bottom: 1px solid #333; padding-bottom:10px;">
+                                <i class="fa-solid fa-clipboard-check"></i> ONAYLANAN KATILIMCILAR
+                            </h3>
+                            <div id="approved-tour-apps-list"></div>
+                        </div>
+
+                        <div id="step-match" class="wizard-step">
+                            <div style="border: 1px solid #333; padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #0d0d0d;">
+                                <h3 style="color:var(--neon-orange); margin-bottom: 15px; font-family: var(--font-main);">
+                                    <i class="fa-solid fa-users-rays"></i> 1. AŞAMA: DEATHMATCH KURASI
+                                </h3>
+                                <button class="draft-btn" onclick="generateDMGroups()"><i class="fa-solid fa-dice"></i> DM Gruplarını Oluştur</button>
+                                <div id="dm-groups-container"></div>
+                            </div>
+
+                            <div style="border: 1px solid #333; padding: 20px; border-radius: 10px; margin-bottom: 20px; background: #0d0d0d;">
+                                <h3 style="color:var(--neon-orange); margin-bottom: 15px; font-family: var(--font-main);">
+                                    <i class="fa-solid fa-hand-fist"></i> 2. AŞAMA: 5V5 FİNAL TAKIMLARI
+                                </h3>
+                                <button class="draft-btn" onclick="generate5v5Teams()"><i class="fa-solid fa-people-group"></i> Seçilenlerden 5v5 Takım Kur</button>
+                                <div id="final-teams-container"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="edit-archive" class="editor-pane admin-card"></div>
+
+                    <div id="edit-sys" class="editor-pane editor-container mode-tr"></div>
+                    
+                    <div id="edit-rac" class="editor-pane admin-card editor-container mode-tr">
+                        <div class="form-group"><label>Saatlik Fiyat (Ortak)</label><input type="text" id="r_price" oninput="uRacing('price', this.value)"></div>
+                        <div class="lang-tr">
+                            <div class="form-group"><label>Durum Etiketi (TR)</label><input type="text" id="r_statusTR" oninput="uRacing('statusTR', this.value)" placeholder="(YAKINDA)"></div>
+                            <div class="form-group"><label>Başlık (TR)</label><input type="text" id="r_titleTR" oninput="uRacing('titleTR', this.value)"></div>
+                            <div class="form-group"><label>1. Özellik (TR)</label><input type="text" id="r_f1TR" oninput="uRacing('f1TR', this.value)"></div>
+                            <div class="form-group"><label>2. Özellik (TR)</label><input type="text" id="r_f2TR" oninput="uRacing('f2TR', this.value)"></div>
+                            <div class="form-group"><label>3. Özellik (TR)</label><input type="text" id="r_f3TR" oninput="uRacing('f3TR', this.value)"></div>
+                            <hr style="border-color:#333; margin:20px 0;">
+                            <div class="form-group"><label>Ekran Kartı</label><input type="text" id="r_spec1TR" oninput="uRacing('spec1TR', this.value)"></div>
+                            <div class="form-group"><label>İşlemci</label><input type="text" id="r_spec2TR" oninput="uRacing('spec2TR', this.value)"></div>
+                            <div class="form-group"><label>RAM</label><input type="text" id="r_spec3TR" oninput="uRacing('spec3TR', this.value)"></div>
+                            <div class="form-group"><label>Kasa Tipi</label><input type="text" id="r_spec4TR" oninput="uRacing('spec4TR', this.value)"></div>
+                        </div>
+                        <div class="lang-en">
+                            <div class="form-group"><label>Durum Etiketi (EN)</label><input type="text" id="r_statusEN" oninput="uRacing('statusEN', this.value)" placeholder="(COMING SOON)"></div>
+                            <div class="form-group"><label>Başlık (EN)</label><input type="text" id="r_titleEN" oninput="uRacing('titleEN', this.value)"></div>
+                            <div class="form-group"><label>1. Özellik (EN)</label><input type="text" id="r_f1EN" oninput="uRacing('f1EN', this.value)"></div>
+                            <div class="form-group"><label>2. Özellik (EN)</label><input type="text" id="r_f2EN" oninput="uRacing('f2EN', this.value)"></div>
+                            <div class="form-group"><label>3. Özellik (EN)</label><input type="text" id="r_f3EN" oninput="uRacing('f3EN', this.value)"></div>
+                            <hr style="border-color:#333; margin:20px 0;">
+                            <div class="form-group"><label>Ekran Kartı</label><input type="text" id="r_spec1EN" oninput="uRacing('spec1EN', this.value)"></div>
+                            <div class="form-group"><label>İşlemci</label><input type="text" id="r_spec2EN" oninput="uRacing('spec2EN', this.value)"></div>
+                            <div class="form-group"><label>RAM</label><input type="text" id="r_spec3EN" oninput="uRacing('spec3EN', this.value)"></div>
+                            <div class="form-group"><label>Kasa Tipi</label><input type="text" id="r_spec4EN" oninput="uRacing('spec4EN', this.value)"></div>
+                        </div>
+                    </div>
+
+                    <div id="edit-gal" class="editor-pane admin-card editor-container mode-tr"></div>
+                </div>
+
+            </div>
+
+            <div class="preview-section" id="preview-panel">
+                <div class="preview-title"><i class="fa-solid fa-eye"></i> CANLI ÖNİZLEME (<span id="prev-lang-text">TR</span>)</div>
+                <div id="preview-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcaSGBZFE--qB9tmWLraB4DkQuf3LtFHA",
+            authDomain: "sniperespormerkezi.firebaseapp.com",
+            projectId: "sniperespormerkezi",
+            storageBucket: "sniperespormerkezi.firebasestorage.app",
+            messagingSenderId: "633581273873",
+            appId: "1:633581273873:web:cab7015b1f49823130c2b0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let isEditorOpen = true;
+        window.toggleEditor = function() {
+            isEditorOpen = !isEditorOpen;
+            const editor = document.getElementById('editor-panel');
+            const btn = document.getElementById('toggleEditorBtn');
+            if(isEditorOpen) {
+                editor.classList.remove('collapsed'); btn.innerHTML = '<i class="fa-solid fa-expand"></i> ÖNİZLEMEYİ BÜYÜT';
+            } else {
+                editor.classList.add('collapsed'); btn.innerHTML = '<i class="fa-solid fa-compress"></i> DÜZENLEYİCİYİ AÇ';
+            }
+        }
+
+        window.openCategory = function(catName) {
+            document.getElementById('category-menu').style.display = 'none';
+            document.getElementById('editor-contents').style.display = 'block';
+            document.querySelector('.editor-top-bar').style.display = 'flex';
+            document.querySelectorAll('.editor-pane').forEach(el => el.style.display = 'none');
+            document.getElementById('edit-' + catName).style.display = 'block';
+
+            if (['players', 'tour_wizard', 'archive'].includes(catName)) {
+                document.getElementById('lang-tabs-container').style.display = 'none';
+                if(catName === 'players') loadPlayers();
+                if(catName === 'tour_wizard') { switchTourStep('step-settings'); } 
+                if(catName === 'archive') renderArchiveEditor();
+            } else {
+                document.getElementById('lang-tabs-container').style.display = 'flex';
+                if(catName === 'gal') renderGalleryEditor();
+                renderPreview(); 
+            }
+        }
+
+        window.closeCategory = function() {
+            document.getElementById('category-menu').style.display = 'grid';
+            document.getElementById('editor-contents').style.display = 'none';
+            document.querySelector('.editor-top-bar').style.display = 'none';
+            renderPreview(); 
+        }
+
+        window.switchTourStep = function(stepId) {
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active-step'));
+            document.querySelectorAll('.wizard-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(stepId).classList.add('active-step');
+            document.getElementById('btn-' + stepId).classList.add('active');
+
+            if(stepId === 'step-apps') loadTourApps();
+            if(stepId === 'step-match') {
+                document.getElementById('preview-area').innerHTML = `<div style="text-align:center; padding-top: 50px; color:#555;"><i class="fa-solid fa-trophy" style="font-size: 5rem; margin-bottom:20px; color:#333;"></i><h2>EŞLEŞMELER BURADA GÖRÜNECEK</h2></div>`;
+            } else {
+                renderPreview();
+            }
+        }
+
+        window.clearApplications = async function() {
+            if(confirm("DİKKAT! Başvuru yapan tüm oyuncuların durumu sıfırlanacak. (Kutudaki yazılara dokunulmaz). Bu işlem geri alınamaz. Emin misiniz?")) {
+                const btn = document.getElementById('saveGlobalBtn');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SİLİNİYOR...';
+                const qApps = query(collection(db, "players"), where("tournamentStatus", "in", ["applied", "approved"]));
+                const snapApps = await getDocs(qApps);
+                snapApps.forEach(async (d) => { await updateDoc(doc(db, "players", d.id), { tournamentStatus: null }); });
+
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> SIFIRLANDI';
+                btn.style.background = "var(--whatsapp-green)";
+                setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> YAYINLA'; btn.style.background = "var(--neon-red)"; }, 3000);
+                loadTourApps();
+                alert("Mevcut tüm oyuncu başvuruları başarıyla temizlendi. Sitedeki yazılar sizin belirlediğiniz şekilde kaldı.");
+            }
+        }
+
+        window.appData = {
+            systems: [ { id: 's1', icon: 'fa-star', theme: 'standart', titleTR: 'STANDART', titleEN: 'STANDARD', price: '60', f1TR: 'ASUS 1050TI', f1EN: 'ASUS 1050TI', f2TR: '144Hz Monitör', f2EN: '144Hz Monitor', f3TR: 'Mekanik Klavye', f3EN: 'Mechanical Keyboard', f4TR: '7.1 Kulaklık', f4EN: '7.1 Headset' } ],
+            racing: { price: '-', titleTR: 'DİREKSİYON SETİ', titleEN: 'RACING' },
+            tournament: {
+                regStatus: 'closed',
+                tagTR: 'SON ŞAMPİYON', tagEN: 'LATEST CHAMPION',
+                titleTR: '8 MART 2026\nVALORANT TURNUVASI', titleEN: '2026 MARCH\nVALORANT TOURNAMENT',
+                descTR: 'En Değerli Oyuncu (MVP): 愛してます (K:24 D:15)', descEN: 'Most Valuable Player (MVP): 愛してます (K:24 D:15)',
+                date: '08.03.2026 - 15:00', entryTR: 'Tamamlandı', entryEN: 'Completed', btnTR: 'YENİ TURNUVA BEKLENİYOR', btnEN: 'WAIT FOR NEXT TOURNAMENT'
+            },
+            indexTournament: { tagTR: 'YENİ', tagEN: 'NEW', titleTR: 'TURNUVALARA KATIL', titleEN: 'JOIN TOURNAMENTS', descTR: 'Şampiyon sen ol.', descEN: 'Be the champion.' },
+            gallery: [],
+            archive: []
+        };
+
+        window.currentEditLang = 'tr';
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-screen').style.display = 'block';
+                await loadFromFirebase();
+                renderAll();
+            } else {
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('dashboard-screen').style.display = 'none';
+            }
+        });
+
+        window.loginUser = function() { const e = document.getElementById('emailInput').value; const p = document.getElementById('passwordInput').value; signInWithEmailAndPassword(auth, e, p).catch(() => document.getElementById('loginError').style.display = 'block'); }
+        window.logoutUser = () => signOut(auth);
+        window.switchLang = function(lang) { currentEditLang = lang; document.getElementById('tab-tr').classList.toggle('active', lang === 'tr'); document.getElementById('tab-en').classList.toggle('active', lang === 'en'); document.querySelectorAll('.editor-container').forEach(el => { el.className = el.className.replace(/mode-tr|mode-en/g, '') + ` mode-${lang}`; }); renderPreview(); }
+
+        window.loadPlayers = async function() {
+            const pendingList = document.getElementById('pending-players-list');
+            const approvedList = document.getElementById('approved-players-list');
+            pendingList.innerHTML = '<p style="color:#aaa;">Yükleniyor...</p>';
+            approvedList.innerHTML = '<p style="color:#aaa;">Yükleniyor...</p>';
+            try {
+                const qPending = query(collection(db, "players"), where("status", "==", "pending"));
+                const snapPending = await getDocs(qPending);
+                let pendHtml = '';
+                snapPending.forEach(doc => {
+                    let p = doc.data();
+                    pendHtml += `<div class="player-item"><div class="player-info"><strong>${p.fullName}</strong> <span>${p.nickname ? `(Nick: ${p.nickname})` : ''}</span></div><div class="player-actions"><button class="btn-approve" onclick="approvePlayer('${doc.id}')">ÜYELİĞİ ONAYLA</button><button class="btn-reject" onclick="rejectPlayer('${doc.id}')">REDDET</button></div></div>`;
+                });
+                pendingList.innerHTML = pendHtml || '<p style="color:#888;">Başvuru yok.</p>';
+
+                const qAppr = query(collection(db, "players"), where("status", "==", "approved"));
+                const snapAppr = await getDocs(qAppr);
+                let apprHtml = '';
+                snapAppr.forEach(doc => {
+                    let p = doc.data();
+                    apprHtml += `<div class="player-item"><div class="player-info"><strong>${p.nickname ? `${p.nickname} (${p.fullName})` : p.fullName}</strong><br><small style="color:#888;">${p.email}</small></div><div class="player-actions" style="display:flex; align-items:center; gap:10px;"><span style="color:#25D366; font-size:0.9rem;"><i class="fa-solid fa-check-double"></i> ONAYLI</span><button class="btn-outline" style="border-color:#00d2ff; color:#00d2ff; padding:5px 10px; font-size:0.8rem;" onclick="resetUserPassword('${p.email}')" title="Şifre Sıfırlama Linki Gönder"><i class="fa-solid fa-key"></i></button><button class="btn-reject" style="padding:5px 10px; font-size:0.8rem;" onclick="deleteApprovedPlayer('${doc.id}')" title="Sistemden Sil/Uzaklaştır"><i class="fa-solid fa-trash"></i></button></div></div>`;
+                });
+                approvedList.innerHTML = apprHtml || '<p style="color:#888;">Onaylı oyuncu yok.</p>';
+            } catch (e) { console.error(e); }
+        }
+
+        window.approvePlayer = async function(id) { await updateDoc(doc(db, "players", id), { status: "approved" }); loadPlayers(); }
+        window.rejectPlayer = async function(id) { await deleteDoc(doc(db, "players", id)); loadPlayers(); }
+        window.deleteApprovedPlayer = async function(id) { if(confirm("DİKKAT! Oyuncunun kaydını silmek istiyor musunuz?")) { await deleteDoc(doc(db, "players", id)); loadPlayers(); } }
+        window.resetUserPassword = function(email) { if(confirm(email + " adresine şifre sıfırlama maili gönderilecek. Onaylıyor musunuz?")) { sendPasswordResetEmail(auth, email).then(() => alert("Şifre sıfırlama linki başarıyla gönderildi!")).catch(e => alert("Hata: " + e.message)); } }
+
+        let globalTournamentPlayers = [];
+        window.loadTourApps = async function() {
+            const pendingAppsList = document.getElementById('pending-tour-apps-list');
+            const approvedAppsList = document.getElementById('approved-tour-apps-list');
+            pendingAppsList.innerHTML = '<p style="color:#aaa;">Yükleniyor...</p>';
+            approvedAppsList.innerHTML = '<p style="color:#aaa;">Yükleniyor...</p>';
+            try {
+                const qPending = query(collection(db, "players"), where("tournamentStatus", "==", "applied"));
+                const snapPending = await getDocs(qPending);
+                let pendHtml = '';
+                snapPending.forEach(doc => {
+                    let p = doc.data();
+                    pendHtml += `<div class="player-item"><div class="player-info"><strong>${p.fullName}</strong> <span>${p.nickname ? `(Nick: ${p.nickname})` : ''}</span></div><div class="player-actions"><button class="btn-tour-approve" onclick="approveTourApp('${doc.id}')">TURNUVAYA ONAYLA</button><button class="btn-reject" onclick="rejectTourApp('${doc.id}')">İPTAL ET</button></div></div>`;
+                });
+                pendingAppsList.innerHTML = pendHtml || '<p style="color:#888;">Bekleyen turnuva başvurusu yok.</p>';
+
+                const qAppr = query(collection(db, "players"), where("tournamentStatus", "==", "approved"));
+                const snapAppr = await getDocs(qAppr);
+                let apprHtml = '';
+                globalTournamentPlayers = []; 
+                snapAppr.forEach(doc => {
+                    let p = doc.data(); p.id = doc.id; p.displayName = p.nickname ? `${p.nickname} (${p.fullName})` : p.fullName;
+                    globalTournamentPlayers.push(p); 
+                    apprHtml += `<div class="player-item"><div class="player-info"><strong>${p.displayName}</strong></div><div class="player-actions"><span style="color:var(--tour-blue);"><i class="fa-solid fa-ticket"></i> KATILIMCI (DRAFT BEKLİYOR)</span></div></div>`;
+                });
+                approvedAppsList.innerHTML = apprHtml || '<p style="color:#888;">Onaylanmış katılımcı yok.</p>';
+            } catch (e) { console.error(e); }
+        }
+
+        window.approveTourApp = async function(id) { await updateDoc(doc(db, "players", id), { tournamentStatus: "approved" }); loadTourApps(); }
+        window.rejectTourApp = async function(id) { await updateDoc(doc(db, "players", id), { tournamentStatus: null }); loadTourApps(); }
+
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } }
+
+        window.generateDMGroups = async function() {
+            if(globalTournamentPlayers.length === 0) { alert("Önce 'Turnuva Başvuruları' sekmesinden katılımcıları onaylayın!"); return; }
+            let draftList = [...globalTournamentPlayers]; shuffleArray(draftList);
+            let dmContainer = document.getElementById('dm-groups-container'); dmContainer.innerHTML = '';
+            let liveHtml = '<h2 style="text-align:center; color:var(--neon-orange); margin-bottom:20px; font-family:var(--font-main);">DEATHMATCH GRUPLARI</h2><div style="display:flex; flex-wrap:wrap; gap:20px;">';
+            let groupCount = 1;
+            for (let i = 0; i < draftList.length; i += 10) {
+                let chunk = draftList.slice(i, i + 10);
+                let groupHtml = `<div class="dm-group"><h4>DEATHMATCH GRUP ${groupCount}</h4>`;
+                let liveGroupHtml = `<div style="flex:1; min-width:300px; background:#111; border:1px solid #333; border-radius:10px; padding:20px;"><h3 style="color:#fff; text-align:center; margin-bottom:15px; border-bottom:2px solid var(--neon-red); padding-bottom:10px;">GRUP ${groupCount}</h3><ul style="list-style:none; padding:0;">`;
+                chunk.forEach(player => {
+                    groupHtml += `<div class="dm-player"><label><input type="checkbox" class="finalist-checkbox" value="${player.id}" data-name="${player.displayName}"> ${player.displayName}</label></div>`;
+                    liveGroupHtml += `<li style="padding:10px; border-bottom:1px solid #222; font-size:1.1rem; color:#ccc;">${player.displayName}</li>`;
+                });
+                groupHtml += `</div>`; liveGroupHtml += `</ul></div>`;
+                dmContainer.innerHTML += groupHtml; liveHtml += liveGroupHtml; groupCount++;
+            }
+            liveHtml += '</div>'; document.getElementById('preview-area').innerHTML = liveHtml;
+        }
+
+        window.generate5v5Teams = function() {
+            let checkboxes = document.querySelectorAll('.finalist-checkbox:checked');
+            if(checkboxes.length !== 10) { alert(`Lütfen tam 10 finalist seçin! (Şu an seçilen: ${checkboxes.length})`); return; }
+            let finalists = []; checkboxes.forEach(cb => { finalists.push({ id: cb.value, name: cb.getAttribute('data-name') }); });
+            shuffleArray(finalists);
+            let redTeam = finalists.slice(0, 5); let blueTeam = finalists.slice(5, 10);
+            let sides = ["SALDIRI ⚔️", "SAVUNMA 🛡️"]; shuffleArray(sides); 
+            let redSide = sides[0]; let blueSide = sides[1];
+
+            let html = `
+            <div class="team-container">
+                <div class="team-box team-red"><h3>KIRMIZI TAKIM <br><span style="font-size:0.8rem; color:#ccc;" id="red-side-label">${redSide}</span></h3>${redTeam.map(p => generateScoreRow(p, 'red')).join('')}</div>
+                <div class="team-box team-blue"><h3>MAVİ TAKIM <br><span style="font-size:0.8rem; color:#ccc;" id="blue-side-label">${blueSide}</span></h3>${blueTeam.map(p => generateScoreRow(p, 'blue')).join('')}</div>
+            </div>
+            <button class="draft-btn" style="background: var(--whatsapp-green); color: #fff; border-color: var(--whatsapp-green); margin-top: 20px; font-size: 1.2rem; padding: 15px;" onclick="finalizeTournament()">
+                <i class="fa-solid fa-trophy"></i> TURNUVAYI BİTİR VE ARŞİVLE
+            </button>`;
+            document.getElementById('final-teams-container').innerHTML = html;
+
+            let liveHtml = `
+            <h2 style="text-align:center; color:var(--neon-orange); margin-bottom:30px; font-family:var(--font-main); font-size:3rem;">BÜYÜK FİNAL</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#0a0a0a; border:1px solid #333; border-radius:20px; padding:40px;">
+                <div style="width:40%; text-align:center;"><h3 style="color:var(--neon-red); font-size:2rem; margin-bottom:5px; font-family:var(--font-main);">KIRMIZI TAKIM</h3><div style="color:#aaa; font-size:1.2rem; margin-bottom:20px; font-weight:bold;">${redSide}</div>${redTeam.map(p => `<div style="background:#1a0505; border:1px solid var(--neon-red); padding:15px; margin-bottom:10px; border-radius:8px; font-size:1.2rem; font-weight:bold;">${p.name}</div>`).join('')}</div>
+                <div style="font-size:4rem; font-weight:900; color:#444; font-family:var(--font-main);">VS</div>
+                <div style="width:40%; text-align:center;"><h3 style="color:var(--team-blue); font-size:2rem; margin-bottom:5px; font-family:var(--font-main);">MAVİ TAKIM</h3><div style="color:#aaa; font-size:1.2rem; margin-bottom:20px; font-weight:bold;">${blueSide}</div>${blueTeam.map(p => `<div style="background:#05121a; border:1px solid var(--team-blue); padding:15px; margin-bottom:10px; border-radius:8px; font-size:1.2rem; font-weight:bold;">${p.name}</div>`).join('')}</div>
+            </div>`;
+            document.getElementById('preview-area').innerHTML = liveHtml;
+        }
+
+        function generateScoreRow(player, teamColor) {
+            return `<div class="score-row"><div class="score-name" style="color: ${teamColor==='red'?'#ff9999':'#99ccff'};">${player.name}</div><div class="score-inputs"><div class="kda-box"><span>K</span><button class="kda-btn" onclick="changeScore('k_${player.id}', -1)">-</button><input type="number" id="k_${player.id}" value="0" readonly><button class="kda-btn" onclick="changeScore('k_${player.id}', 1)">+</button></div><div class="kda-box"><span>D</span><button class="kda-btn" onclick="changeScore('d_${player.id}', -1)">-</button><input type="number" id="d_${player.id}" value="0" readonly><button class="kda-btn" onclick="changeScore('d_${player.id}', 1)">+</button></div><div class="kda-box"><span>A</span><button class="kda-btn" onclick="changeScore('a_${player.id}', -1)">-</button><input type="number" id="a_${player.id}" value="0" readonly><button class="kda-btn" onclick="changeScore('a_${player.id}', 1)">+</button></div></div></div>`;
+        }
+
+        window.changeScore = function(inputId, amount) { let input = document.getElementById(inputId); let currentVal = parseInt(input.value) || 0; let newVal = currentVal + amount; if(newVal >= 0) input.value = newVal; }
+
+        window.finalizeTournament = async function() {
+            let checkboxes = document.querySelectorAll('.finalist-checkbox:checked');
+            let playersData = [];
+            checkboxes.forEach(cb => {
+                let id = cb.value; let name = cb.getAttribute('data-name');
+                let k = parseInt(document.getElementById('k_' + id).value) || 0;
+                let d = parseInt(document.getElementById('d_' + id).value) || 0;
+                let a = parseInt(document.getElementById('a_' + id).value) || 0;
+                let score = (k * 2) + (a * 1) - (d * 0.5);
+                playersData.push({ id, name, k, d, a, score });
+            });
+            
+            playersData.sort((a, b) => b.score - a.score);
+            let mvp = playersData[0];
+            
+            if(!confirm(`🏆 TURNUVA BİTİRİLİYOR!\n\n🌟 MVP: ${mvp.name}\n🔥 Puan: ${mvp.score}\n\nBu turnuva tüm detaylarıyla site arşivine kaydedilecektir. Onaylıyor musunuz?`)) return;
+
+            try {
+                let dmMasa1 = [];
+                let dmGroup1 = document.querySelectorAll('.dm-group')[0];
+                if(dmGroup1) { dmGroup1.querySelectorAll('.dm-player label').forEach(lbl => { let name = lbl.innerText.trim(); let isWinner = lbl.querySelector('input').checked; dmMasa1.push({name, isWinner}); }); }
+
+                let dmMasa2 = [];
+                let dmGroup2 = document.querySelectorAll('.dm-group')[1];
+                if(dmGroup2) { dmGroup2.querySelectorAll('.dm-player label').forEach(lbl => { let name = lbl.innerText.trim(); let isWinner = lbl.querySelector('input').checked; dmMasa2.push({name, isWinner}); }); }
+
+                let teamRed = [];
+                document.querySelectorAll('.team-red .score-row').forEach(row => { let name = row.querySelector('.score-name').innerText.trim(); let stats = playersData.find(p => p.name === name); if(stats) teamRed.push(stats); });
+
+                let teamBlue = [];
+                document.querySelectorAll('.team-blue .score-row').forEach(row => { let name = row.querySelector('.score-name').innerText.trim(); let stats = playersData.find(p => p.name === name); if(stats) teamBlue.push(stats); });
+
+                const aylar = ["OCAK", "ŞUBAT", "MART", "NİSAN", "MAYIS", "HAZİRAN", "TEMMUZ", "AĞUSTOS", "EYLÜL", "EKİM", "KASIM", "ARALIK"];
+                const aylarDosya = ["ocak", "subat", "mart", "nisan", "mayis", "haziran", "temmuz", "agustos", "eylul", "ekim", "kasim", "aralik"];
+                
+                let date = new Date();
+                let dd = date.getDate();
+                let monthIdx = date.getMonth();
+                let ayStr = aylar[monthIdx];
+                let ayDosya = aylarDosya[monthIdx];
+                let yilStr = date.getFullYear();
+                let tourName = `${yilStr} ${ayStr} VALORANT TURNUVASI`;
+                
+                let dateVal = document.getElementById('t_date').value || "";
+                let timeVal = dateVal.includes("-") ? dateVal.split("-")[1].trim() : "15:00";
+
+                let klasorIsmi = `${dd}-${ayDosya}-${yilStr}`;
+                let mvpResimYolu = `turnuva_resimler/${klasorIsmi}/${klasorIsmi}-mvp-resim/mvp.jpg`;
+
+                // Turnuvayı bitirince admin ayarlarını sıfırlar ve butonları kapatırız
+                window.appData.tournament = {
+                    regStatus: 'closed',
+                    tagTR: 'SON ŞAMPİYON', tagEN: 'LATEST CHAMPION',
+                    titleTR: tourName, titleEN: tourName,
+                    descTR: `En Değerli Oyuncu (MVP): ${mvp.name} (K:${mvp.k} D:${mvp.d})`,
+                    descEN: `Most Valuable Player (MVP): ${mvp.name} (K:${mvp.k} D:${mvp.d})`,
+                    date: date.toLocaleDateString('tr-TR') + ' - ' + timeVal,
+                    entryTR: 'Tamamlandı', entryEN: 'Completed',
+                    btnTR: 'YENİ TURNUVA BEKLENİYOR', btnEN: 'WAIT FOR NEXT TOURNAMENT'
+                };
+
+                let newArchiveItem = {
+                    id: Date.now().toString(),
+                    date: date.toLocaleDateString('tr-TR'),
+                    time: timeVal,
+                    title: tourName,
+                    folderName: klasorIsmi,
+                    mvpName: mvp.name,
+                    mvpScore: mvp.score,
+                    mvpKill: mvp.k,
+                    mvpImage: mvpResimYolu,
+                    leaderboard: playersData,
+                    bracket: { dm1: dmMasa1, dm2: dmMasa2, red: teamRed, blue: teamBlue }
+                };
+
+                if(!window.appData.archive) window.appData.archive = [];
+                window.appData.archive.unshift(newArchiveItem); 
+
+                await setDoc(doc(db, "siteData", "v2Data"), window.appData);
+
+                for(let p of playersData) {
+                    let playerRef = doc(db, "players", p.id);
+                    let pDoc = await getDoc(playerRef);
+                    if(pDoc.exists()) { let currentPoints = pDoc.data().totalPoints || 0; await updateDoc(playerRef, { totalPoints: currentPoints + p.score }); }
+                }
+                for(let player of globalTournamentPlayers) { await updateDoc(doc(db, "players", player.id), { tournamentStatus: null }); }
+
+                alert(`Tebrikler! Turnuva tam detaylı olarak arşive eklendi.\nGörselin sitede görünmesi için lütfen şu yola MVP fotoğrafını ekleyin:\n${mvpResimYolu}`);
+                document.getElementById('final-teams-container').innerHTML = ''; document.getElementById('dm-groups-container').innerHTML = '';
+                renderPreview();
+            } catch (error) { alert("Hata oluştu: " + error.message); }
+        }
+
+        function renderArchiveEditor() {
+            let html = `
+            <div style="background:#111; border:1px solid var(--neon-orange); padding:20px; border-radius:10px; margin-bottom:25px;">
+                <h4 style="color:var(--neon-orange); margin-bottom:15px; font-family:var(--font-main);">GEÇMİŞ TURNUVA EKLE (SADECE ÖZET)</h4>
+                <div class="form-group"><label>Turnuva Adı</label><input type="text" id="arc_title" placeholder="Örn: 8 MART 2026 VALORANT TURNUVASI"></div>
+                <div style="display:flex; gap:10px;">
+                    <div class="form-group" style="flex:1;"><label>Tarih</label><input type="text" id="arc_date" placeholder="Örn: 08.03.2026"></div>
+                    <div class="form-group" style="flex:1;"><label>MVP Oyuncu Adı</label><input type="text" id="arc_mvp" placeholder="Örn: omur77"></div>
+                </div>
+                <div style="display:flex; gap:10px;">
+                    <div class="form-group" style="flex:1;"><label>MVP Puanı</label><input type="number" id="arc_score" placeholder="Örn: 25"></div>
+                    <div class="form-group" style="flex:1;"><label>MVP Kill</label><input type="number" id="arc_kill" placeholder="Örn: 15"></div>
+                </div>
+                <div class="form-group"><label>MVP Resmi Dosya Yolu</label><input type="text" id="arc_img" placeholder="Örn: turnuva_resimler/8-mart-2026/8-mart-2026-mvp-resim/mvp.jpg"></div>
+                <button class="btn-outline" style="border-color:var(--whatsapp-green); color:var(--whatsapp-green); width:100%; justify-content:center; margin-top:10px;" onclick="addManualArchive()"><i class="fa-solid fa-plus"></i> ARŞİVE EKLE</button>
+            </div>
+            <h4 style="color:#fff; margin-bottom:15px; font-family:var(--font-main); border-bottom:1px solid #333; padding-bottom:10px;">KAYITLI ARŞİVLER</h4>
+            `;
+
+            if(!appData.archive || appData.archive.length === 0) {
+                html += '<p style="color:#666;">Henüz arşivlenmiş turnuva bulunmuyor.</p>';
+            } else {
+                appData.archive.forEach((item, index) => {
+                    html += `
+                    <div style="border:1px solid #333; padding:15px; border-radius:10px; margin-bottom:15px; background:#0a0a0a; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <strong style="color:var(--neon-orange); font-family:var(--font-main); font-size:1.1rem;">${item.title}</strong><br>
+                            <small style="color:#ccc;">${item.date} &nbsp;|&nbsp; MVP: ${item.mvpName} (${item.mvpScore} Puan)</small>
+                        </div>
+                        <button class="btn-reject" onclick="deleteArchiveItem(${index})" style="padding:10px 15px;"><i class="fa-solid fa-trash"></i> SİL</button>
+                    </div>`;
+                });
+            }
+            document.getElementById('edit-archive').innerHTML = html;
+        }
+
+        window.addManualArchive = async function() {
+            let title = document.getElementById('arc_title').value;
+            let date = document.getElementById('arc_date').value;
+            let mvpName = document.getElementById('arc_mvp').value;
+            let score = document.getElementById('arc_score').value;
+            let kill = document.getElementById('arc_kill').value;
+            let imgUrl = document.getElementById('arc_img').value;
+
+            if(!title || !date || !mvpName) { alert("Lütfen Turnuva Adı, Tarih ve MVP alanlarını doldurun!"); return; }
+
+            let newItem = {
+                id: Date.now().toString(),
+                title: title,
+                date: date,
+                time: "15:00",
+                mvpName: mvpName,
+                mvpScore: score || 0,
+                mvpKill: kill || 0,
+                mvpImage: imgUrl || 'turnuva_resimler/default_mvp.jpg',
+                leaderboard: [], 
+                bracket: null
+            };
+
+            if(!window.appData.archive) window.appData.archive = [];
+            window.appData.archive.unshift(newItem);
+            
+            renderArchiveEditor();
+
+            const btn = document.getElementById('saveGlobalBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> KAYDEDİLİYOR...';
+            await setDoc(doc(db, "siteData", "v2Data"), window.appData);
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> YAYINLANDI';
+            btn.style.background = "var(--whatsapp-green)";
+            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> YAYINLA'; btn.style.background = "var(--neon-red)"; }, 2000);
+        }
+
+        window.deleteArchiveItem = async function(index) {
+            if(confirm("Bu turnuvayı arşivden siliyorsunuz. Bu işlem geri alınamaz. Onaylıyor musunuz?")) {
+                appData.archive.splice(index, 1);
+                renderArchiveEditor();
+                const btn = document.getElementById('saveGlobalBtn');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SİLİNİYOR...';
+                await setDoc(doc(db, "siteData", "v2Data"), window.appData);
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> YAYINLANDI';
+                btn.style.background = "var(--whatsapp-green)";
+                setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> YAYINLA'; btn.style.background = "var(--neon-red)"; }, 2000);
+            }
+        }
+
+        window.uSys = function(index, field, val) { window.appData.systems[index][field] = val; renderPreview(); }
+        window.uRacing = function(field, val) { window.appData.racing[field] = val; renderPreview(); }
+        window.uGal = function(index, field, val) { window.appData.gallery[index][field] = val; renderPreview(); }
+        
+        window.uTour = function(field, val) { window.appData.tournament[field] = val; renderPreview(); }
+        window.uIndexTour = function(field, val) { 
+            if(!window.appData.indexTournament) window.appData.indexTournament = {};
+            window.appData.indexTournament[field] = val; 
+            renderPreview(); 
+        }
+
+        function renderAll() { renderEditor(); renderRacingEditor(); renderTourEditor(); renderGalleryEditor(); renderArchiveEditor(); renderPreview(); }
+        function renderEditor() { document.getElementById('edit-sys').innerHTML = "<p style='color:#888;'>Sistem verileri buradan düzenlenir...</p>"; } 
+        function renderRacingEditor() {}
+        
+        // YENİ: GALERİ YAZILARI DÜZENLEYİCİ (LİNK YOK, SADECE YAZI)
+        function renderGalleryEditor() {
+            let html = '<p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Görselleri sitenizin ana klasöründeki <b>"galeri"</b> klasörüne <b>1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg</b> adlarıyla atın. Aşağıdan sadece resimlerin üzerindeki yazıları ayarlayabilirsiniz.</p>';
+            
+            while(appData.gallery.length < 5) {
+                appData.gallery.push({ titleTR: '', titleEN: '' });
+            }
+
+            appData.gallery.slice(0, 5).forEach((g, i) => {
+                html += `
+                <div style="border:1px solid #333; padding:15px; border-radius:10px; margin-bottom:15px; background:#0a0a0a;">
+                    <div style="color:var(--neon-red); font-weight:bold; margin-bottom:10px;">Resim ${i+1} <span style="color:#666; font-size:0.8rem;">(Klasördeki: ${i+1}.jpg)</span></div>
+                    <div class="lang-tr"><div class="form-group"><label>Resim Yazısı (TR)</label><input value="${g.titleTR || ''}" oninput="uGal(${i}, 'titleTR', this.value)"></div></div>
+                    <div class="lang-en"><div class="form-group"><label>Resim Yazısı (EN)</label><input value="${g.titleEN || ''}" oninput="uGal(${i}, 'titleEN', this.value)"></div></div>
+                </div>`;
+            });
+            document.getElementById('edit-gal').innerHTML = html;
+        }
+        
+        function renderTourEditor() {
+            document.getElementById('t_regStatus').value = appData.tournament.regStatus || 'closed';
+            document.getElementById('t_tagTR').value = appData.tournament.tagTR || '';
+            document.getElementById('t_titleTR').value = appData.tournament.titleTR || '';
+            document.getElementById('t_descTR').value = appData.tournament.descTR || '';
+            document.getElementById('t_entryTR').value = appData.tournament.entryTR || '';
+            document.getElementById('t_btnTR').value = appData.tournament.btnTR || '';
+            document.getElementById('t_tagEN').value = appData.tournament.tagEN || '';
+            document.getElementById('t_titleEN').value = appData.tournament.titleEN || '';
+            document.getElementById('t_descEN').value = appData.tournament.descEN || '';
+            document.getElementById('t_entryEN').value = appData.tournament.entryEN || '';
+            document.getElementById('t_btnEN').value = appData.tournament.btnEN || '';
+            document.getElementById('t_date').value = appData.tournament.date || '';
+
+            if(appData.indexTournament) {
+                document.getElementById('it_tagTR').value = appData.indexTournament.tagTR || '';
+                document.getElementById('it_titleTR').value = appData.indexTournament.titleTR || '';
+                document.getElementById('it_descTR').value = appData.indexTournament.descTR || '';
+                document.getElementById('it_tagEN').value = appData.indexTournament.tagEN || '';
+                document.getElementById('it_titleEN').value = appData.indexTournament.titleEN || '';
+                document.getElementById('it_descEN').value = appData.indexTournament.descEN || '';
+            }
+        }
+
+        function renderPreview() {
+            let isRegistrationOpen = appData.tournament.regStatus === 'open';
+            let html = '';
+            
+            if(isRegistrationOpen) {
+                html += `<div style="padding:20px; text-align:center; color:var(--whatsapp-green); font-family:var(--font-main); border:1px solid var(--whatsapp-green); margin-bottom:20px;">Şu an Yeni Turnuva Başvurusu Açık (Buton Kırmızı)</div>`;
+            } else {
+                html += `<div style="padding:20px; text-align:center; color:var(--neon-red); font-family:var(--font-main); border:1px solid var(--neon-red); margin-bottom:20px;">Başvurular Kapalı. Siteye manuel girdiğiniz yazılar yansıyacak ve buton gri olacak.</div>`;
+            }
+            
+            document.getElementById('preview-area').innerHTML = html; 
+        }
+
+        async function loadFromFirebase() {
+            const docSnap = await getDoc(doc(db, "siteData", "v2Data"));
+            if (docSnap.exists()) {
+                let data = docSnap.data();
+                if(data.systems) window.appData.systems = data.systems;
+                if(data.tournament) window.appData.tournament = { ...window.appData.tournament, ...data.tournament };
+                if(data.indexTournament) window.appData.indexTournament = { ...window.appData.indexTournament, ...data.indexTournament };
+                if(data.racing) window.appData.racing = { ...window.appData.racing, ...data.racing };
+                if(data.gallery) window.appData.gallery = data.gallery;
+                if(data.archive) window.appData.archive = data.archive; 
+            }
+        }
+
+        window.saveToFirebase = async function() {
+            const btn = document.getElementById('saveGlobalBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> YAYINLANIYOR...';
+            await setDoc(doc(db, "siteData", "v2Data"), window.appData);
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> YAYINLANDI';
+            btn.style.background = "var(--whatsapp-green)";
+            setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> YAYINLA'; btn.style.background = "var(--neon-red)"; }, 3000);
+        }
+    </script>
+</body>
+</html>
