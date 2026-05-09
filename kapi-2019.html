@@ -388,6 +388,8 @@
             } else {
                 document.getElementById('lang-tabs-container').style.display = 'flex';
                 if(catName === 'gal') renderGalleryEditor();
+                if(catName === 'sys') renderEditor();
+                if(catName === 'rac') renderRacingEditor();
                 renderPreview(); 
             }
         }
@@ -415,7 +417,7 @@
         }
 
         window.clearApplications = async function() {
-            if(confirm("DİKKAT! Başvuru yapan tüm oyuncuların durumu sıfırlanacak. (Kutudaki yazılara dokunulmaz). Bu işlem geri alınamaz. Emin misiniz?")) {
+            if(confirm("DİKKAT! Başvuru yapan tüm oyuncuların durumu sıfırlanacak. (Kutudaki yazıları DOKUNMAZ. Sadece oyuncu başvurularını siler. Bu işlem geri alınamaz. Emin misiniz?")) {
                 const btn = document.getElementById('saveGlobalBtn');
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SİLİNİYOR...';
                 const qApps = query(collection(db, "players"), where("tournamentStatus", "in", ["applied", "approved"]));
@@ -632,7 +634,6 @@
                 let klasorIsmi = `${dd}-${ayDosya}-${yilStr}`;
                 let mvpResimYolu = `turnuva_resimler/${klasorIsmi}/${klasorIsmi}-mvp-resim/mvp.jpg`;
 
-                // Turnuvayı bitirince admin ayarlarını sıfırlar ve butonları kapatırız
                 window.appData.tournament = {
                     regStatus: 'closed',
                     tagTR: 'SON ŞAMPİYON', tagEN: 'LATEST CHAMPION',
@@ -773,28 +774,68 @@
         }
 
         function renderAll() { renderEditor(); renderRacingEditor(); renderTourEditor(); renderGalleryEditor(); renderArchiveEditor(); renderPreview(); }
-        function renderEditor() { document.getElementById('edit-sys').innerHTML = "<p style='color:#888;'>Sistem verileri buradan düzenlenir...</p>"; } 
-        function renderRacingEditor() {}
         
-        // YENİ: GALERİ YAZILARI DÜZENLEYİCİ (LİNK YOK, SADECE YAZI)
-        function renderGalleryEditor() {
-            let html = '<p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Görselleri sitenizin ana klasöründeki <b>"galeri"</b> klasörüne <b>1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg</b> adlarıyla atın. Aşağıdan sadece resimlerin üzerindeki yazıları ayarlayabilirsiniz.</p>';
-            
-            while(appData.gallery.length < 5) {
-                appData.gallery.push({ titleTR: '', titleEN: '' });
-            }
+        function renderEditor() {
+            let html = '<p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Anasayfadaki bilgisayar sistemlerinin fiyatlarını ve özelliklerini buradan güncelleyebilirsiniz.</p>';
 
-            appData.gallery.slice(0, 5).forEach((g, i) => {
-                html += `
-                <div style="border:1px solid #333; padding:15px; border-radius:10px; margin-bottom:15px; background:#0a0a0a;">
-                    <div style="color:var(--neon-red); font-weight:bold; margin-bottom:10px;">Resim ${i+1} <span style="color:#666; font-size:0.8rem;">(Klasördeki: ${i+1}.jpg)</span></div>
-                    <div class="lang-tr"><div class="form-group"><label>Resim Yazısı (TR)</label><input value="${g.titleTR || ''}" oninput="uGal(${i}, 'titleTR', this.value)"></div></div>
-                    <div class="lang-en"><div class="form-group"><label>Resim Yazısı (EN)</label><input value="${g.titleEN || ''}" oninput="uGal(${i}, 'titleEN', this.value)"></div></div>
-                </div>`;
-            });
-            document.getElementById('edit-gal').innerHTML = html;
+            if (!window.appData.systems || window.appData.systems.length === 0) {
+                html += "<p style='color:var(--neon-red);'>Veritabanında sistem bulunamadı.</p>";
+            } else {
+                window.appData.systems.forEach((sys, i) => {
+                    html += `
+                    <div style="border:1px solid #333; padding:15px; border-radius:10px; margin-bottom:15px; background:#0a0a0a;">
+                        <div style="color:var(--neon-red); font-weight:bold; margin-bottom:10px; text-transform:uppercase;">${sys.titleTR || 'Sistem ' + (i+1)}</div>
+                        
+                        <div class="form-group"><label>Fiyat (TL/SAAT)</label><input type="text" value="${sys.price || ''}" oninput="uSys(${i}, 'price', this.value)"></div>
+                        <div class="form-group"><label>İkon (FontAwesome Sınıfı)</label><input type="text" value="${sys.icon || ''}" oninput="uSys(${i}, 'icon', this.value)" placeholder="Örn: fa-star"></div>
+                        <div class="form-group"><label>Tema (standart / platinum)</label><select onchange="uSys(${i}, 'theme', this.value)" style="width:100%; padding:12px; background:#0a0a0a; border:1px solid #333; color:#fff; border-radius:5px;">
+                            <option value="standart" ${sys.theme === 'standart' ? 'selected' : ''}>Standart (Siyah/Gri)</option>
+                            <option value="platinum" ${sys.theme === 'platinum' ? 'selected' : ''}>Platinum (Kırmızı Çerçeveli)</option>
+                        </select></div>
+
+                        <div class="lang-tr">
+                            <div class="form-group"><label>Başlık (TR)</label><input type="text" value="${sys.titleTR || ''}" oninput="uSys(${i}, 'titleTR', this.value)"></div>
+                            <div class="form-group"><label>1. Özellik (TR)</label><input type="text" value="${sys.f1TR || ''}" oninput="uSys(${i}, 'f1TR', this.value)"></div>
+                            <div class="form-group"><label>2. Özellik (TR)</label><input type="text" value="${sys.f2TR || ''}" oninput="uSys(${i}, 'f2TR', this.value)"></div>
+                            <div class="form-group"><label>3. Özellik (TR)</label><input type="text" value="${sys.f3TR || ''}" oninput="uSys(${i}, 'f3TR', this.value)"></div>
+                            <div class="form-group"><label>4. Özellik (TR)</label><input type="text" value="${sys.f4TR || ''}" oninput="uSys(${i}, 'f4TR', this.value)"></div>
+                        </div>
+                        <div class="lang-en">
+                            <div class="form-group"><label>Başlık (EN)</label><input type="text" value="${sys.titleEN || ''}" oninput="uSys(${i}, 'titleEN', this.value)"></div>
+                            <div class="form-group"><label>1. Özellik (EN)</label><input type="text" value="${sys.f1EN || ''}" oninput="uSys(${i}, 'f1EN', this.value)"></div>
+                            <div class="form-group"><label>2. Özellik (EN)</label><input type="text" value="${sys.f2EN || ''}" oninput="uSys(${i}, 'f2EN', this.value)"></div>
+                            <div class="form-group"><label>3. Özellik (EN)</label><input type="text" value="${sys.f3EN || ''}" oninput="uSys(${i}, 'f3EN', this.value)"></div>
+                            <div class="form-group"><label>4. Özellik (EN)</label><input type="text" value="${sys.f4EN || ''}" oninput="uSys(${i}, 'f4EN', this.value)"></div>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('edit-sys').innerHTML = html;
         }
-        
+
+        function renderRacingEditor() {
+            let r = window.appData.racing || {};
+            if(document.getElementById('r_price')) document.getElementById('r_price').value = r.price || '';
+            if(document.getElementById('r_statusTR')) document.getElementById('r_statusTR').value = r.statusTR || '';
+            if(document.getElementById('r_titleTR')) document.getElementById('r_titleTR').value = r.titleTR || '';
+            if(document.getElementById('r_f1TR')) document.getElementById('r_f1TR').value = r.f1TR || '';
+            if(document.getElementById('r_f2TR')) document.getElementById('r_f2TR').value = r.f2TR || '';
+            if(document.getElementById('r_f3TR')) document.getElementById('r_f3TR').value = r.f3TR || '';
+            if(document.getElementById('r_spec1TR')) document.getElementById('r_spec1TR').value = r.spec1TR || '';
+            if(document.getElementById('r_spec2TR')) document.getElementById('r_spec2TR').value = r.spec2TR || '';
+            if(document.getElementById('r_spec3TR')) document.getElementById('r_spec3TR').value = r.spec3TR || '';
+            if(document.getElementById('r_spec4TR')) document.getElementById('r_spec4TR').value = r.spec4TR || '';
+            if(document.getElementById('r_statusEN')) document.getElementById('r_statusEN').value = r.statusEN || '';
+            if(document.getElementById('r_titleEN')) document.getElementById('r_titleEN').value = r.titleEN || '';
+            if(document.getElementById('r_f1EN')) document.getElementById('r_f1EN').value = r.f1EN || '';
+            if(document.getElementById('r_f2EN')) document.getElementById('r_f2EN').value = r.f2EN || '';
+            if(document.getElementById('r_f3EN')) document.getElementById('r_f3EN').value = r.f3EN || '';
+            if(document.getElementById('r_spec1EN')) document.getElementById('r_spec1EN').value = r.spec1EN || '';
+            if(document.getElementById('r_spec2EN')) document.getElementById('r_spec2EN').value = r.spec2EN || '';
+            if(document.getElementById('r_spec3EN')) document.getElementById('r_spec3EN').value = r.spec3EN || '';
+            if(document.getElementById('r_spec4EN')) document.getElementById('r_spec4EN').value = r.spec4EN || '';
+        }
+
         function renderTourEditor() {
             document.getElementById('t_regStatus').value = appData.tournament.regStatus || 'closed';
             document.getElementById('t_tagTR').value = appData.tournament.tagTR || '';
@@ -822,14 +863,26 @@
         function renderPreview() {
             let isRegistrationOpen = appData.tournament.regStatus === 'open';
             let html = '';
-            
             if(isRegistrationOpen) {
                 html += `<div style="padding:20px; text-align:center; color:var(--whatsapp-green); font-family:var(--font-main); border:1px solid var(--whatsapp-green); margin-bottom:20px;">Şu an Yeni Turnuva Başvurusu Açık (Buton Kırmızı)</div>`;
             } else {
                 html += `<div style="padding:20px; text-align:center; color:var(--neon-red); font-family:var(--font-main); border:1px solid var(--neon-red); margin-bottom:20px;">Başvurular Kapalı. Siteye manuel girdiğiniz yazılar yansıyacak ve buton gri olacak.</div>`;
             }
-            
             document.getElementById('preview-area').innerHTML = html; 
+        }
+
+        function renderGalleryEditor() {
+            let html = '<p style="color:#888; font-size:0.85rem; margin-bottom:20px;">Görselleri sitenizin ana klasöründeki <b>"galeri"</b> klasörüne <b>1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg</b> adlarıyla atın. Aşağıdan sadece resimlerin üzerindeki yazıları ayarlayabilirsiniz.</p>';
+            while(appData.gallery.length < 5) { appData.gallery.push({ titleTR: '', titleEN: '' }); }
+            appData.gallery.slice(0, 5).forEach((g, i) => {
+                html += `
+                <div style="border:1px solid #333; padding:15px; border-radius:10px; margin-bottom:15px; background:#0a0a0a;">
+                    <div style="color:var(--neon-red); font-weight:bold; margin-bottom:10px;">Resim ${i+1} <span style="color:#666; font-size:0.8rem;">(Klasördeki: ${i+1}.jpg)</span></div>
+                    <div class="lang-tr"><div class="form-group"><label>Resim Yazısı (TR)</label><input value="${g.titleTR || ''}" oninput="uGal(${i}, 'titleTR', this.value)"></div></div>
+                    <div class="lang-en"><div class="form-group"><label>Resim Yazısı (EN)</label><input value="${g.titleEN || ''}" oninput="uGal(${i}, 'titleEN', this.value)"></div></div>
+                </div>`;
+            });
+            document.getElementById('edit-gal').innerHTML = html;
         }
 
         async function loadFromFirebase() {
