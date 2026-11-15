@@ -396,6 +396,9 @@
             let sysHtml = '';
             visibleSystemCards(siteData.systems).forEach(sys => {
                 let isPlat = sys.theme === 'platinum';
+                const featureText = value => escapeSystemText(isPlat && typeof value === 'string'
+                    ? value.replace(/\bRyzen\s+5\s+5600\b/gi, 'Ryzen 5 5600X')
+                    : value);
                 let styleCard = isPlat ? 'style="border-color: var(--neon-red); box-shadow: 0 10px 40px rgba(255,62,62,0.15);"' : '';
                 let styleIcon = isPlat ? 'style="background: var(--neon-red); color:#fff;"' : '';
                 let stylePrice = isPlat ? 'style="color: var(--neon-red);"' : '';
@@ -406,10 +409,10 @@
                     <h3 class="card-title" data-system-text data-tr="${escapeSystemText(sys.titleTR)}" data-en="${escapeSystemText(sys.titleEN)}">${escapeSystemText(sys.titleTR)}</h3>
                     <div class="card-price" ${stylePrice}>${escapeSystemText(sys.price)} TL<small data-tr="/SAAT" data-en="/HOUR">/SAAT</small></div>
                     <ul class="card-features">
-                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f1TR)}" data-en="${escapeSystemText(sys.f1EN)}">${escapeSystemText(sys.f1TR)}</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f2TR)}" data-en="${escapeSystemText(sys.f2EN)}">${escapeSystemText(sys.f2TR)}</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f3TR)}" data-en="${escapeSystemText(sys.f3EN)}">${escapeSystemText(sys.f3TR)}</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f4TR)}" data-en="${escapeSystemText(sys.f4EN)}">${escapeSystemText(sys.f4TR)}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${featureText(sys.f1TR)}" data-en="${featureText(sys.f1EN)}">${featureText(sys.f1TR)}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${featureText(sys.f2TR)}" data-en="${featureText(sys.f2EN)}">${featureText(sys.f2TR)}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${featureText(sys.f3TR)}" data-en="${featureText(sys.f3EN)}">${featureText(sys.f3TR)}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${featureText(sys.f4TR)}" data-en="${featureText(sys.f4EN)}">${featureText(sys.f4TR)}</span></li>
                     </ul>
                 </div>`;
             });
