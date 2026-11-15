@@ -329,7 +329,11 @@
                 spans[1].classList.toggle('active', lang === 'en');
             });
             document.querySelectorAll(`[data-${lang}]`).forEach(el => {
-                el.innerHTML = el.getAttribute(`data-${lang}`); 
+                if (el.hasAttribute('data-system-text')) {
+                    el.textContent = el.getAttribute(`data-${lang}`);
+                } else {
+                    el.innerHTML = el.getAttribute(`data-${lang}`);
+                } 
             });
             document.querySelectorAll(`[data-placeholder-${lang}]`).forEach(el => { 
                 el.setAttribute('placeholder', el.getAttribute(`data-placeholder-${lang}`)); 
@@ -348,7 +352,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { withoutStandardSystem } from "./system-cards.js";
+        import { visibleSystemCards, escapeSystemText } from "./system-cards.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCcaSGBZFE--qB9tmWLraB4DkQuf3LtFHA",
@@ -368,7 +372,7 @@
 
         function renderSite() {
             let sysHtml = '';
-            withoutStandardSystem(siteData.systems).forEach(sys => {
+            visibleSystemCards(siteData.systems).forEach(sys => {
                 let isPlat = sys.theme === 'platinum';
                 let styleCard = isPlat ? 'style="border-color: var(--neon-red); box-shadow: 0 10px 40px rgba(255,62,62,0.15);"' : '';
                 let styleIcon = isPlat ? 'style="background: var(--neon-red); color:#fff;"' : '';
@@ -376,14 +380,14 @@
                 
                 sysHtml += `
                 <div class="price-card" ${styleCard}>
-                    <div class="card-icon" ${styleIcon}><i class="fa-solid ${sys.icon}"></i></div>
-                    <h3 class="card-title" data-tr="${sys.titleTR}" data-en="${sys.titleEN}">${sys.titleTR}</h3>
-                    <div class="card-price" ${stylePrice}>${sys.price} TL<small data-tr="/SAAT" data-en="/HOUR">/SAAT</small></div>
+                    <div class="card-icon" ${styleIcon}><i class="fa-solid ${escapeSystemText(sys.icon)}"></i></div>
+                    <h3 class="card-title" data-system-text data-tr="${escapeSystemText(sys.titleTR)}" data-en="${escapeSystemText(sys.titleEN)}">${escapeSystemText(sys.titleTR)}</h3>
+                    <div class="card-price" ${stylePrice}>${escapeSystemText(sys.price)} TL<small data-tr="/SAAT" data-en="/HOUR">/SAAT</small></div>
                     <ul class="card-features">
-                        <li><i class="fa-solid fa-check"></i> <span data-tr="${sys.f1TR}" data-en="${sys.f1EN}">${sys.f1TR}</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span data-tr="${sys.f2TR}" data-en="${sys.f2EN}">${sys.f2TR}</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span data-tr="${sys.f3TR}" data-en="${sys.f3EN}">${sys.f3TR}</span></li>
-                        <li><i class="fa-solid fa-check"></i> <span data-tr="${sys.f4TR}" data-en="${sys.f4EN}">${sys.f4TR}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f1TR)}" data-en="${escapeSystemText(sys.f1EN)}">${escapeSystemText(sys.f1TR)}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f2TR)}" data-en="${escapeSystemText(sys.f2EN)}">${escapeSystemText(sys.f2TR)}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f3TR)}" data-en="${escapeSystemText(sys.f3EN)}">${escapeSystemText(sys.f3TR)}</span></li>
+                        <li><i class="fa-solid fa-check"></i> <span data-system-text data-tr="${escapeSystemText(sys.f4TR)}" data-en="${escapeSystemText(sys.f4EN)}">${escapeSystemText(sys.f4TR)}</span></li>
                     </ul>
                 </div>`;
             });
