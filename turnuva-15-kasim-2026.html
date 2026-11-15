@@ -127,8 +127,9 @@
         .lb-item:first-child .lb-rank { color:var(--neon-orange); }
         .leaderboard-details .lb-item .lb-rank { color:#888; }
         .leaderboard-note { color:#aaa; margin-bottom:15px; }
-        .leaderboard-details summary, .final-stats summary { cursor:pointer; margin:18px 0; }
+        .leaderboard-details summary { cursor:pointer; margin:18px 0; }
         .final-stats { padding:0 10% 35px; }
+        .final-stats .section-title { margin-bottom:20px; }
     </style>
 </head>
 <body>
@@ -154,6 +155,10 @@
                 <label>TARİH</label>
             </div>
             <div class="info-box">
+                <span id="arc-date-time">13:00</span>
+                <label>SAAT</label>
+            </div>
+            <div class="info-box">
                 <span>Tamamlandı</span>
                 <label>DURUM</label>
             </div>
@@ -167,6 +172,20 @@
                 <div class="mvp-badge">ELİT STATÜ</div>
                 <div class="mvp-image-area" style="background:linear-gradient(to bottom, transparent 60%, #0a0a0a 100%),url('turnuva_resimler/15-kasim-2026/15-kasim-2026-mvp-resim/15-kasim-2026-mvp.png') center/cover;"
                     role="img" aria-label="15 Kasım Valorant Turnuvası MVP portresi"></div>
+                <div class="mvp-stats">
+                    <div class="stat-item">
+                        <label>ÇATIŞMA SKORU</label>
+                        <span id="ui-mvp-score">—</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>ÖLDÜRME (KİLL)</label>
+                        <span id="ui-mvp-k">—</span>
+                    </div>
+                    <div class="stat-item">
+                        <label>ÖLÜM (DEATH)</label>
+                        <span class="orange-text" id="ui-mvp-d">—</span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="half-col">
@@ -338,8 +357,8 @@
         </div>
     </section>
 
-    <details class="final-stats">
-        <summary>5v5 final istatistikleri</summary>
+    <section class="final-stats" aria-labelledby="final-stats-title">
+        <h2 id="final-stats-title" class="section-title">5v5 <span>FİNAL İSTATİSTİKLERİ</span></h2>
         <div class="results-grid">
             <div class="results-table" tabindex="0" role="region" aria-label="Şampiyon takım">
                 <table>
@@ -368,7 +387,7 @@
                 </table>
             </div>
         </div>
-    </details>
+    </section>
 
     <section class="media-section">
         <h2 class="section-title">TURNUVA <span>GALERİSİ</span></h2>
