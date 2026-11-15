@@ -20,7 +20,7 @@
             --team-red: #ff4d4d; --team-blue: #00d2ff;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; line-height: 1.6; }
+        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
         
         /* HEADER (MENÜ) */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
@@ -150,7 +150,7 @@
         .lightbox-close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 2.5rem; cursor: pointer; transition: 0.3s; }
         .lightbox-close:hover { color: var(--neon-red); transform: scale(1.1); }
 
-        .archive-section { padding: 80px 10%; background: #050505; border-top: 1px solid #111; }
+        .archive-section { flex: 1; padding: 80px 10%; background: #050505; border-top: 1px solid #111; }
         .archive-section .section-header h1 { font-family:var(--font-main); font-size:clamp(2rem,6vw,4rem); }
         .archive-section .section-header h1 span { color:var(--neon-red); }
         .archive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 30px; }
@@ -162,6 +162,8 @@
         .ac-mvp { color: var(--neon-orange); font-size: 1rem; font-weight: bold; margin-bottom: 20px; text-shadow: 0 0 10px #000; }
         
         .ac-link { color: var(--neon-red); text-decoration: none; font-size: 0.85rem; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; transition: 0.3s; text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 3px; }
+        .archive-card .ac-link::after { content: ''; position: absolute; inset: 0; }
+        .archive-card:focus-within { outline: 2px solid var(--neon-red); outline-offset: 3px; }
         .ac-link:hover { gap: 10px; background: rgba(0,0,0,0.8); }
 
         .empty-card { display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px dashed #222; background: transparent; text-align: center; color: #444; min-height: 200px;}
