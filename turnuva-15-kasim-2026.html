@@ -121,11 +121,14 @@
         .results-table th, .results-table td { padding:10px 12px; border-bottom:1px solid #252525; white-space:nowrap; text-align:left; }
         .results-table thead { color:#ccc; }
         .results-table td { font-variant-numeric:tabular-nums; }
-        .finalist { color:var(--whatsapp-green); font-size:.73rem; margin-left:.35rem; }
-        .final-heading { margin:35px 0 15px; font-size:1.8rem; }
-        .portrait-section { justify-content:center; text-align:center; }
-        .mvp-portrait { display:block; width:100%; max-width:620px; margin:auto; border-radius:8px; }
         button.media-item { padding:0; width:100%; }
+        .mvp-leaderboard-section .section-title { text-align:left; }
+        .mvp-leaderboard-section .section-title i { color:var(--neon-red); font-size:1.5rem; margin-right:10px; }
+        .lb-item:first-child .lb-rank { color:var(--neon-orange); }
+        .leaderboard-details .lb-item .lb-rank { color:#888; }
+        .leaderboard-note { color:#aaa; margin-bottom:15px; }
+        .leaderboard-details summary, .final-stats summary { cursor:pointer; margin:18px 0; }
+        .final-stats { padding:0 10% 35px; }
     </style>
 </head>
 <body>
@@ -157,48 +160,186 @@
         </div>
     </section>
 
-    <section class="bracket-section results-section">
-        <h2 class="section-title">TURNUVA <span>TABLOSU</span></h2>
-        <p class="section-subtitle">K / D / A sırasıyla öldürme, ölüm ve asist sayılarını gösterir.</p>
-        <div class="results-grid">
-            <div class="results-table" tabindex="0" role="region" aria-label="Deathmatch · Grup 1">
-                <table>
-                    <caption>Deathmatch · Grup 1</caption>
-                    <thead><tr><th scope="col">Oyuncu</th><th scope="col">K / D / A</th></tr></thead>
-                    <tbody>
-                        <tr><th scope="row">Jeanne <span class="finalist">Finalist</span></th><td>40 / 20 / 6</td></tr>
-                        <tr><th scope="row">ezra <span class="finalist">Finalist</span></th><td>30 / 21 / 3</td></tr>
-                        <tr><th scope="row">ROLX <span class="finalist">Finalist</span></th><td>29 / 21 / 7</td></tr>
-                        <tr><th scope="row">Hawkeye <span class="finalist">Finalist</span></th><td>28 / 21 / 5</td></tr>
-                        <tr><th scope="row">DANAVAR <span class="finalist">Finalist</span></th><td>26 / 23 / 8</td></tr>
-                        <tr><th scope="row">THOOR</th><td>21 / 23 / 7</td></tr>
-                        <tr><th scope="row">etlikreep</th><td>19 / 23 / 10</td></tr>
-                        <tr><th scope="row">DeathRayzer JR</th><td>15 / 27 / 8</td></tr>
-                        <tr><th scope="row">adem1234</th><td>14 / 27 / 3</td></tr>
-                        <tr><th scope="row">AHLOWXXVCB</th><td>13 / 29 / 7</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="results-table" tabindex="0" role="region" aria-label="Deathmatch · Grup 2">
-                <table>
-                    <caption>Deathmatch · Grup 2</caption>
-                    <thead><tr><th scope="col">Oyuncu</th><th scope="col">K / D / A</th></tr></thead>
-                    <tbody>
-                        <tr><th scope="row">HasanSabb4H <span class="finalist">Finalist</span></th><td>40 / 28 / 5</td></tr>
-                        <tr><th scope="row">45ayakmuq <span class="finalist">Finalist</span></th><td>39 / 22 / 7</td></tr>
-                        <tr><th scope="row">THOOR <span class="finalist">Finalist</span></th><td>34 / 21 / 8</td></tr>
-                        <tr><th scope="row">blx Mahmut <span class="finalist">Finalist</span></th><td>34 / 24 / 7</td></tr>
-                        <tr><th scope="row">Chichii <span class="finalist">Finalist</span></th><td>33 / 25 / 6</td></tr>
-                        <tr><th scope="row">ajmmsttarr</th><td>26 / 27 / 11</td></tr>
-                        <tr><th scope="row">THATSMYJASON</th><td>20 / 36 / 15</td></tr>
-                        <tr><th scope="row">egemen31</th><td>14 / 31 / 10</td></tr>
-                        <tr><th scope="row">omurbolizan</th><td>13 / 30 / 9</td></tr>
-                        <tr><th scope="row">iys67</th><td>13 / 22 / 8</td></tr>
-                    </tbody>
-                </table>
+    <section class="mvp-leaderboard-section">
+        <div class="half-col">
+            <h2 class="section-title"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> TURNUVA <span>MVP’Sİ</span></h2>
+            <div class="mvp-card">
+                <div class="mvp-badge">ELİT STATÜ</div>
+                <div class="mvp-image-area" style="background:linear-gradient(to bottom, transparent 60%, #0a0a0a 100%),url('turnuva_resimler/15-kasim-2026/15-kasim-2026-mvp-resim/15-kasim-2026-mvp.png') center/cover;"
+                    role="img" aria-label="15 Kasım Valorant Turnuvası MVP portresi"></div>
             </div>
         </div>
-        <h3 class="section-title final-heading">5v5 <span>FİNAL</span></h3>
+        <div class="half-col">
+            <h2 class="section-title"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> <span>LİDERLİK TABLOSU</span></h2>
+            <p class="leaderboard-note">5v5 finali · Öldürme sayısına göre, eşitlikte daha az ölüm önde.</p>
+            <div class="lb-list"><div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">01</div>
+                        <div class="lb-info"><h4>Jeanne</h4><p>K: 27 | D: 16 | A: 3</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>27</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">02</div>
+                        <div class="lb-info"><h4>45ayakmuq</h4><p>K: 27 | D: 20 | A: 5</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>27</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">03</div>
+                        <div class="lb-info"><h4>ROLX</h4><p>K: 21 | D: 18 | A: 5</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>21</span></div>
+                </div>
+                </div>
+            <details class="leaderboard-details">
+                <summary class="btn-view-all">Tüm sıralamayı gör</summary>
+                <div class="lb-list"><div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">04</div>
+                        <div class="lb-info"><h4>Chichii</h4><p>K: 21 | D: 18 | A: 2</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>21</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">05</div>
+                        <div class="lb-info"><h4>Hawkeye</h4><p>K: 20 | D: 19 | A: 8</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>20</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">06</div>
+                        <div class="lb-info"><h4>HasanSabb4H</h4><p>K: 20 | D: 20 | A: 5</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>20</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">07</div>
+                        <div class="lb-info"><h4>blx Mahmut</h4><p>K: 18 | D: 18 | A: 6</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>18</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">08</div>
+                        <div class="lb-info"><h4>ezra</h4><p>K: 11 | D: 16 | A: 8</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>11</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">09</div>
+                        <div class="lb-info"><h4>THOOR</h4><p>K: 10 | D: 17 | A: 10</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>10</span></div>
+                </div>
+                <div class="lb-item">
+                    <div class="lb-left">
+                        <div class="lb-rank">10</div>
+                        <div class="lb-info"><h4>DANAVAR</h4><p>K: 6 | D: 19 | A: 2</p></div>
+                    </div>
+                    <div class="lb-right"><label>ÖLDÜRME</label><span>6</span></div>
+                </div></div>
+            </details>
+        </div>
+    </section>
+
+    <section class="bracket-section">
+        <h2 class="section-title">TURNUVA <span>TABLOSU</span></h2>
+        <p class="section-subtitle">Deathmatch elemelerinden 5v5 Büyük Final'e uzanan hayatta kalma mücadelesi.</p>
+
+        <div class="bracket-container" id="arc-bracket-container">
+            <div class="bracket-col elemeler">
+                <div class="match-box">
+                    <div class="match-header">DEATHMATCH: GRUP 1</div>
+                    <ul class="player-list dm-list">
+<li><span>Jeanne</span><span class="kda-text">40/20/6</span></li>
+<li><span>ezra</span><span class="kda-text">30/21/3</span></li>
+<li><span>ROLX</span><span class="kda-text">29/21/7</span></li>
+<li><span>Hawkeye</span><span class="kda-text">28/21/5</span></li>
+<li><span>DANAVAR</span><span class="kda-text">26/23/8</span></li>
+<li><span>THOOR</span><span class="kda-text">21/23/7</span></li>
+<li><span>etlikreep</span><span class="kda-text">19/23/10</span></li>
+<li><span>DeathRayzer JR</span><span class="kda-text">15/27/8</span></li>
+<li><span>adem1234</span><span class="kda-text">14/27/3</span></li>
+<li><span>AHLOWXXVCB</span><span class="kda-text">13/29/7</span></li>
+</ul>
+                </div>
+                <div class="match-box">
+                    <div class="match-header">DEATHMATCH: GRUP 2</div>
+                    <ul class="player-list dm-list">
+<li><span>HasanSabb4H</span><span class="kda-text">40/28/5</span></li>
+<li><span>45ayakmuq</span><span class="kda-text">39/22/7</span></li>
+<li><span>THOOR</span><span class="kda-text">34/21/8</span></li>
+<li><span>blx Mahmut</span><span class="kda-text">34/24/7</span></li>
+<li><span>Chichii</span><span class="kda-text">33/25/6</span></li>
+<li><span>ajmmsttarr</span><span class="kda-text">26/27/11</span></li>
+<li><span>THATSMYJASON</span><span class="kda-text">20/36/15</span></li>
+<li><span>egemen31</span><span class="kda-text">14/31/10</span></li>
+<li><span>omurbolizan</span><span class="kda-text">13/30/9</span></li>
+<li><span>iys67</span><span class="kda-text">13/22/8</span></li>
+</ul>
+                </div>
+            </div>
+
+            <div class="bracket-col yari-final">
+                <div class="match-box">
+                    <div class="match-header" style="color:var(--whatsapp-green);">GRUP 1 FİNALİSTLERİ</div>
+                    <ul class="player-list winner-list">
+<li>Jeanne <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>ezra <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>ROLX <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>Hawkeye <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>DANAVAR <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+</ul>
+                </div>
+                <div class="match-box">
+                    <div class="match-header" style="color:var(--whatsapp-green);">GRUP 2 FİNALİSTLERİ</div>
+                    <ul class="player-list winner-list">
+<li>HasanSabb4H <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>45ayakmuq <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>THOOR <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>blx Mahmut <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+<li>Chichii <i class="fa-solid fa-check" aria-hidden="true"></i></li>
+</ul>
+                </div>
+            </div>
+
+            <div class="bracket-col final" style="justify-content: center;">
+                <div style="color: var(--neon-red); font-family: var(--font-main); font-weight:bold; margin-bottom:10px; font-size:1.4rem;"><i class="fa-solid fa-trophy"></i> BÜYÜK FİNAL (5v5)</div>
+                <div class="match-box final-box">
+                    <div class="team-block winner-team-blue">
+                        <div class="team-title">ŞAMPİYON TAKIM <i class="fa-solid fa-trophy" style="color:var(--team-blue);"></i></div>
+                        <ul class="player-list dm-list">
+<li><span>ROLX</span><span class="kda-text">21/18/5</span></li>
+<li><span>Hawkeye</span><span class="kda-text">20/19/8</span></li>
+<li><span>HasanSabb4H</span><span class="kda-text">20/20/5</span></li>
+<li><span>blx Mahmut</span><span class="kda-text">18/18/6</span></li>
+<li><span>THOOR</span><span class="kda-text">10/17/10</span></li>
+</ul>
+                    </div>
+                    <div class="team-block loser-team-red">
+                        <div class="team-title">2. TAKIM</div>
+                        <ul class="player-list dm-list" style="opacity: 0.8;">
+<li><span>45ayakmuq</span><span class="kda-text">27/20/5</span></li>
+<li><span>Jeanne</span><span class="kda-text">27/16/3</span></li>
+<li><span>Chichii</span><span class="kda-text">21/18/2</span></li>
+<li><span>ezra</span><span class="kda-text">11/16/8</span></li>
+<li><span>DANAVAR</span><span class="kda-text">6/19/2</span></li>
+</ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <details class="final-stats">
+        <summary>5v5 final istatistikleri</summary>
         <div class="results-grid">
             <div class="results-table" tabindex="0" role="region" aria-label="Şampiyon takım">
                 <table>
@@ -227,14 +368,7 @@
                 </table>
             </div>
         </div>
-    </section>
-
-    <section class="mvp-leaderboard-section portrait-section">
-        <div class="half-col">
-            <h2 class="section-title">TURNUVA <span>MVP’Sİ</span></h2>
-            <img class="mvp-portrait" src="turnuva_resimler/15-kasim-2026/15-kasim-2026-mvp-resim/15-kasim-2026-mvp.png" alt="15 Kasım 2026 Valorant Turnuvası MVP portresi" loading="lazy">
-        </div>
-    </section>
+    </details>
 
     <section class="media-section">
         <h2 class="section-title">TURNUVA <span>GALERİSİ</span></h2>
