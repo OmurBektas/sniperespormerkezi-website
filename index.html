@@ -86,6 +86,7 @@
         .card-features i { color: var(--neon-red); }
 
         .feature-row { margin-top: 50px; display: flex; justify-content: center; }
+        .pricing-grid:empty + .feature-row { margin-top: 0; }
         .wide-card { background: linear-gradient(145deg, #1a1a1a, #0f0f0f); border: 2px solid #333; border-radius: 24px; padding: 50px; width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transition: all 0.4s; }
         .wide-card:hover { border-color: var(--neon-orange); box-shadow: 0 0 40px rgba(255, 107, 0, 0.2); transform: translateY(-5px); }
         .wide-card .card-icon { color: var(--neon-orange); background: rgba(255, 107, 0, 0.1); width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; margin-bottom: 30px;}
@@ -347,6 +348,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { withoutStandardSystem } from "./system-cards.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCcaSGBZFE--qB9tmWLraB4DkQuf3LtFHA",
@@ -365,10 +367,8 @@
         };
 
         function renderSite() {
-            if(!siteData.systems || siteData.systems.length === 0) return;
-
             let sysHtml = '';
-            siteData.systems.forEach(sys => {
+            withoutStandardSystem(siteData.systems).forEach(sys => {
                 let isPlat = sys.theme === 'platinum';
                 let styleCard = isPlat ? 'style="border-color: var(--neon-red); box-shadow: 0 10px 40px rgba(255,62,62,0.15);"' : '';
                 let styleIcon = isPlat ? 'style="background: var(--neon-red); color:#fff;"' : '';
