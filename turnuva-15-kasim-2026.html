@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>15 Kasım 2026 Valorant Turnuvası | Sniper Espor Merkezi</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --neon-red: #ff3e3e; --dark-red: #cc0000; --neon-orange: #ff6b00; --whatsapp-green: #25D366; 
+            --bg-black: #050505; --card-bg: #0f0f0f; --text-white: #ffffff; 
+            --font-main: 'Chakra Petch', sans-serif; --font-body: 'Inter', sans-serif; 
+            --team-red: #ff4d4d; --team-blue: #00d2ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-black); color: var(--text-white); overflow-x: hidden; line-height: 1.6; }
+        
+        .back-nav { position: absolute; top: 30px; left: 50px; font-family: var(--font-main); font-weight: bold; font-size: 1.1rem; z-index: 20; }
+        .back-nav a { color: #888; text-decoration: none; transition: 0.3s; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 8px; border: 1px solid #333;}
+        .back-nav a:hover { color: var(--neon-red); border-color: var(--neon-red); }
+
+        /* DEVASA HERO KISMI (TURNUVA SAYFASININ AYNISI) */
+        .tour-hero { padding: 150px 10% 80px 10%; min-height: 70vh; display: flex; flex-direction: column; justify-content: center; position: relative; background: radial-gradient(circle at top right, rgba(255, 62, 62, 0.05), transparent 50%); border-bottom: 1px solid #111; }
+        .tour-status-badge { background: rgba(255, 107, 0, 0.1); border: 1px solid var(--neon-orange); color: var(--neon-orange); padding: 5px 15px; font-family: var(--font-main); font-weight: bold; font-size: 0.8rem; letter-spacing: 2px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; width: fit-content; border-radius: 3px; }
+        .tour-main-title { font-family: var(--font-main); font-size: clamp(3rem, 6vw, 6rem); font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 20px; color: #fff; text-shadow: 0 0 30px rgba(255, 62, 62, 0.3); }
+        .tour-main-title span { color: var(--neon-red); text-shadow: 0 0 40px rgba(255, 62, 62, 0.8); }
+        .tour-desc { font-size: 1.1rem; color: #aaa; max-width: 600px; margin-bottom: 40px; }
+
+        .info-boxes { display: flex; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .info-box { background: #0a0a0a; border: 1px solid #222; padding: 20px 30px; text-align: center; border-radius: 5px; min-width: 140px; }
+        .info-box span { display: block; font-family: var(--font-main); font-size: 2rem; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 5px; }
+        .info-box label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+
+        /* MVP & LİDERLİK TABLOSU */
+        .mvp-leaderboard-section { display: flex; gap: 50px; padding: 80px 10%; max-width: 1400px; margin: 0 auto; }
+        .half-col { flex: 1; }
+
+        .mvp-card { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 5px; overflow: hidden; position: relative; display: flex; flex-direction: column; min-height: 500px; }
+        .mvp-badge { position: absolute; top: 20px; right: 20px; background: transparent; border: 1px solid var(--neon-red); color: var(--neon-red); padding: 5px 15px; font-family: var(--font-main); font-size: 0.8rem; letter-spacing: 1px; z-index: 2; font-weight: bold;}
+        .mvp-image-area { flex: 1; background-size: cover; background-position: top center; position: relative; }
+        .mvp-name { position: absolute; bottom: 20px; left: 30px; font-family: var(--font-main); font-size: 2.5rem; font-weight: 900; color: #fff; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,0,0,0.9);}
+        .mvp-stats { display: flex; justify-content: space-between; padding: 25px 30px; background: #0a0a0a; border-top: 1px solid #1a1a1a; }
+        .stat-item label { display: block; color: #666; font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
+        .stat-item span { font-family: var(--font-main); font-size: 1.5rem; color: #fff; font-weight: bold; }
+        .stat-item span.orange-text { color: var(--neon-orange); }
+
+        .lb-list { display: flex; flex-direction: column; gap: 15px; }
+        .lb-item { display: flex; align-items: center; justify-content: space-between; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 15px 20px; border-radius: 5px; }
+        .lb-left { display: flex; align-items: center; gap: 20px; }
+        .lb-rank { font-family: var(--font-main); font-size: 1.5rem; font-weight: 900; color: #444; width: 30px;}
+        .lb-info h4 { font-family: var(--font-main); font-size: 1.2rem; color: #fff; margin-bottom: 2px; }
+        .lb-info p { color: #666; font-size: 0.75rem; }
+        .lb-right { text-align: right; }
+        .lb-right span { font-family: var(--font-main); font-size: 1.2rem; font-weight: bold; color: #fff; }
+
+        /* TABLOLAR */
+        .bracket-section { padding: 60px 10%; background: #0a0a0a; border-top: 1px solid #111; text-align: center; overflow-x: auto; }
+        .section-title { font-family: var(--font-main); font-size: 2.5rem; color: #fff; text-transform: uppercase; margin-bottom: 10px; }
+        .section-title span { color: var(--neon-red); text-shadow: 0 0 20px rgba(255,62,62,0.5); }
+        .section-subtitle { color: #666; font-size: 0.9rem; margin-bottom: 50px; }
+
+        .bracket-container { display: flex; justify-content: center; align-items: center; gap: 40px; min-width: 1000px; margin: 0 auto; padding-bottom: 20px; }
+        .bracket-col { display: flex; flex-direction: column; justify-content: center; gap: 40px; position: relative; }
+        
+        .match-box { background: #0f0f0f; border: 1px solid #222; width: 310px; border-radius: 5px; position: relative; }
+        .match-header { background: #151515; padding: 10px 15px; font-size: 0.8rem; color: #aaa; text-align: center; font-family: var(--font-main); border-bottom: 1px solid #222; font-weight: bold; letter-spacing: 1px; border-radius: 4px 4px 0 0;}
+        .player-list { list-style: none; padding: 0; margin: 0; background: #080808; border-radius: 0 0 4px 4px; overflow: hidden;}
+        .player-list li { padding: 8px 15px; font-size: 0.85rem; color: #666; border-bottom: 1px solid #111; font-family: var(--font-body); text-align: left; display: flex; justify-content: space-between; align-items: center;}
+        
+        .dm-list li { color: #fff; }
+        .kda-text { color: #888; font-size: 0.75rem; font-family: var(--font-main); letter-spacing: 1px; font-weight: bold; }
+        
+        .winner-list li { color: #fff; }
+        .winner-list li i { color: var(--whatsapp-green); font-size: 0.85rem;}
+
+        .final-box { border: 2px solid var(--neon-red); width: 350px; border-radius: 5px;}
+        .team-title { font-family: var(--font-main); font-size: 1.1rem; color: #fff; padding: 15px; text-align: center; font-weight: bold; letter-spacing: 1px;}
+        .winner-team-blue .team-title { background: rgba(0, 210, 255, 0.1); border-bottom: 2px solid var(--team-blue); color: var(--team-blue); border-radius: 4px 4px 0 0;}
+        .loser-team-red .team-title { background: rgba(255, 77, 77, 0.1); border-bottom: 2px solid var(--team-red); color: var(--team-red); border-top: 1px dashed #333;}
+        
+        .bracket-col.elemeler::after { content: ''; position: absolute; right: -20px; top: 25%; height: 50%; width: 2px; background: #444; z-index: 0; }
+        .bracket-col.elemeler .match-box::after { content: ''; position: absolute; right: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+        .bracket-col.yari-final::before { content: ''; position: absolute; left: -20px; top: 50%; height: 2px; width: 20px; background: #444; z-index: 0; }
+        .bracket-col.yari-final::after { content: ''; position: absolute; right: -20px; top: 25%; height: 50%; width: 2px; background: #444; z-index: 0; }
+        .bracket-col.yari-final .match-box::after { content: ''; position: absolute; right: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+        .bracket-col.final::before { content: ''; position: absolute; left: -20px; width: 20px; height: 2px; background: #444; top: 50%; z-index: 0; }
+
+        /* MEDYA GALERİSİ */
+        .media-section { padding: 80px 10%; background: #080808; border-top: 1px solid #111; text-align: center; }
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+        .media-item { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid #1a1a1a; aspect-ratio: 16/9; cursor: pointer; transition: 0.3s; background: #0f0f0f; display: flex; justify-content: center; align-items: center;}
+        .media-item:hover { border-color: var(--neon-red); transform: scale(1.03); z-index: 2; box-shadow: 0 10px 30px rgba(255, 62, 62, 0.2); }
+        .media-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.3s; }
+        .media-item video { width: 100%; height: 100%; object-fit: cover; outline: none; border: none; }
+        .media-item:hover img { opacity: 1; }
+
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.95); z-index: 99999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(5px);}
+        .lightbox.active { display: flex; opacity: 1; }
+        .lightbox img { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 0 50px rgba(255, 62, 62, 0.4); border: 2px solid var(--neon-red); }
+        .lightbox-close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 2.5rem; cursor: pointer; transition: 0.3s; }
+        .lightbox-close:hover { color: var(--neon-red); transform: scale(1.1); }
+
+        #loading-screen { position: fixed; top:0; left:0; width:100%; height:100%; background:#050505; z-index:9999; display:flex; flex-direction:column; gap: 20px; justify-content:center; align-items:center; font-family:var(--font-main); font-size:1.2rem; color:var(--neon-red); letter-spacing: 2px;}
+        footer { text-align: center; padding: 40px; border-top: 1px solid #111; color: #444; background: #000; font-size: 0.85rem; }
+
+        @media (max-width: 900px) { .mvp-leaderboard-section { flex-direction: column; } }
+        @media (max-width: 768px) {
+            .back-nav { top: 20px; left: 20px; font-size: 0.9rem; } 
+            .tour-main-title { font-size: 3rem; }
+            .info-boxes { flex-direction: row; gap: 10px; justify-content: flex-start; } .info-box { padding: 15px 20px; min-width: auto; flex: 1; } .info-box span { font-size: 1.5rem; }
+            .bracket-section, .mvp-leaderboard-section, .media-section { padding: 40px 20px; } 
+            .lightbox-close { top: 10px; right: 20px; }
+        }
+        .results-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr)); gap:20px; text-align:left; }
+        .results-table { overflow-x:auto; background:#0f0f0f; border:1px solid #292929; border-radius:8px; }
+        .results-table table { width:100%; border-collapse:collapse; font-size:.9rem; }
+        .results-table caption { padding:14px; font-family:var(--font-main); font-weight:bold; text-align:left; background:#191919; }
+        .results-table th, .results-table td { padding:10px 12px; border-bottom:1px solid #252525; white-space:nowrap; text-align:left; }
+        .results-table thead { color:#ccc; }
+        .results-table td { font-variant-numeric:tabular-nums; }
+        .finalist { color:var(--whatsapp-green); font-size:.73rem; margin-left:.35rem; }
+        .final-heading { margin:35px 0 15px; font-size:1.8rem; }
+        .portrait-section { justify-content:center; text-align:center; }
+        .mvp-portrait { display:block; width:100%; max-width:620px; margin:auto; border-radius:8px; }
+        button.media-item { padding:0; width:100%; }
+    </style>
+</head>
+<body>
+
+    <div class="lightbox" id="lightbox">
+        <i class="fa-solid fa-xmark lightbox-close" onclick="closeLightbox()"></i>
+        <img src="" id="lightbox-img" alt="Büyütülmüş Resim">
+    </div>
+
+    <div class="back-nav">
+        <a href="turnuva.html"><i class="fa-solid fa-arrow-left"></i> TURNUVALARA DÖN</a>
+    </div>
+
+    <section class="tour-hero">
+        <div class="tour-status-badge mvp-badge"><i class="fa-solid fa-clock-rotate-left" style="animation:none;"></i> <span>GEÇMİŞ TURNUVA</span></div>
+        
+        <h1 class="tour-main-title" id="arc-title">15 KASIM 2026<br><span>VALORANT TURNUVASI</span></h1>
+        <p class="tour-desc" id="arc-desc">Deathmatch elemeleri, 5v5 final sonuçları ve etkinlik galerisi.</p>
+        
+        <div class="info-boxes">
+            <div class="info-box">
+                <span id="arc-date-day">15.11.2026</span>
+                <label>TARİH</label>
+            </div>
+            <div class="info-box">
+                <span>Tamamlandı</span>
+                <label>DURUM</label>
+            </div>
+        </div>
+    </section>
+
+    <section class="bracket-section results-section">
+        <h2 class="section-title">TURNUVA <span>TABLOSU</span></h2>
+        <p class="section-subtitle">K / D / A sırasıyla öldürme, ölüm ve asist sayılarını gösterir.</p>
+        <div class="results-grid">
+            <div class="results-table" tabindex="0" role="region" aria-label="Deathmatch · Grup 1">
+                <table>
+                    <caption>Deathmatch · Grup 1</caption>
+                    <thead><tr><th scope="col">Oyuncu</th><th scope="col">K / D / A</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Jeanne <span class="finalist">Finalist</span></th><td>40 / 20 / 6</td></tr>
+                        <tr><th scope="row">ezra <span class="finalist">Finalist</span></th><td>30 / 21 / 3</td></tr>
+                        <tr><th scope="row">ROLX <span class="finalist">Finalist</span></th><td>29 / 21 / 7</td></tr>
+                        <tr><th scope="row">Hawkeye <span class="finalist">Finalist</span></th><td>28 / 21 / 5</td></tr>
+                        <tr><th scope="row">DANAVAR <span class="finalist">Finalist</span></th><td>26 / 23 / 8</td></tr>
+                        <tr><th scope="row">THOOR</th><td>21 / 23 / 7</td></tr>
+                        <tr><th scope="row">etlikreep</th><td>19 / 23 / 10</td></tr>
+                        <tr><th scope="row">DeathRayzer JR</th><td>15 / 27 / 8</td></tr>
+                        <tr><th scope="row">adem1234</th><td>14 / 27 / 3</td></tr>
+                        <tr><th scope="row">AHLOWXXVCB</th><td>13 / 29 / 7</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="results-table" tabindex="0" role="region" aria-label="Deathmatch · Grup 2">
+                <table>
+                    <caption>Deathmatch · Grup 2</caption>
+                    <thead><tr><th scope="col">Oyuncu</th><th scope="col">K / D / A</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">HasanSabb4H <span class="finalist">Finalist</span></th><td>40 / 28 / 5</td></tr>
+                        <tr><th scope="row">45ayakmuq <span class="finalist">Finalist</span></th><td>39 / 22 / 7</td></tr>
+                        <tr><th scope="row">THOOR <span class="finalist">Finalist</span></th><td>34 / 21 / 8</td></tr>
+                        <tr><th scope="row">blx Mahmut <span class="finalist">Finalist</span></th><td>34 / 24 / 7</td></tr>
+                        <tr><th scope="row">Chichii <span class="finalist">Finalist</span></th><td>33 / 25 / 6</td></tr>
+                        <tr><th scope="row">ajmmsttarr</th><td>26 / 27 / 11</td></tr>
+                        <tr><th scope="row">THATSMYJASON</th><td>20 / 36 / 15</td></tr>
+                        <tr><th scope="row">egemen31</th><td>14 / 31 / 10</td></tr>
+                        <tr><th scope="row">omurbolizan</th><td>13 / 30 / 9</td></tr>
+                        <tr><th scope="row">iys67</th><td>13 / 22 / 8</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h3 class="section-title final-heading">5v5 <span>FİNAL</span></h3>
+        <div class="results-grid">
+            <div class="results-table" tabindex="0" role="region" aria-label="Şampiyon takım">
+                <table>
+                    <caption>Şampiyon takım</caption>
+                    <thead><tr><th scope="col">Oyuncu</th><th scope="col">K / D / A</th><th scope="col">İlk kan</th><th scope="col">Spike kurma</th><th scope="col">Spike imha</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">ROLX</th><td>21 / 18 / 5</td><td>5</td><td>1</td><td>1</td></tr>
+                        <tr><th scope="row">Hawkeye</th><td>20 / 19 / 8</td><td>0</td><td>1</td><td>0</td></tr>
+                        <tr><th scope="row">HasanSabb4H</th><td>20 / 20 / 5</td><td>5</td><td>4</td><td>0</td></tr>
+                        <tr><th scope="row">blx Mahmut</th><td>18 / 18 / 6</td><td>1</td><td>1</td><td>1</td></tr>
+                        <tr><th scope="row">THOOR</th><td>10 / 17 / 10</td><td>1</td><td>2</td><td>3</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="results-table" tabindex="0" role="region" aria-label="İkinci takım">
+                <table>
+                    <caption>İkinci takım</caption>
+                    <thead><tr><th scope="col">Oyuncu</th><th scope="col">K / D / A</th><th scope="col">İlk kan</th><th scope="col">Spike kurma</th><th scope="col">Spike imha</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">45ayakmuq</th><td>27 / 20 / 5</td><td>4</td><td>0</td><td>0</td></tr>
+                        <tr><th scope="row">Jeanne</th><td>27 / 16 / 3</td><td>3</td><td>0</td><td>1</td></tr>
+                        <tr><th scope="row">Chichii</th><td>21 / 18 / 2</td><td>3</td><td>0</td><td>3</td></tr>
+                        <tr><th scope="row">ezra</th><td>11 / 16 / 8</td><td>1</td><td>12</td><td>0</td></tr>
+                        <tr><th scope="row">DANAVAR</th><td>6 / 19 / 2</td><td>1</td><td>0</td><td>0</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="mvp-leaderboard-section portrait-section">
+        <div class="half-col">
+            <h2 class="section-title">TURNUVA <span>MVP’Sİ</span></h2>
+            <img class="mvp-portrait" src="turnuva_resimler/15-kasim-2026/15-kasim-2026-mvp-resim/15-kasim-2026-mvp.png" alt="15 Kasım 2026 Valorant Turnuvası MVP portresi" loading="lazy">
+        </div>
+    </section>
+
+    <section class="media-section">
+        <h2 class="section-title">TURNUVA <span>GALERİSİ</span></h2>
+        <div class="media-grid">
+            <button type="button" class="media-item" onclick="openLightbox(this.firstElementChild)"><img src="turnuva_resimler/15-kasim-2026/15-kasim-2026-galeri/2.jpeg" alt="Turnuva fotoğrafı 1" loading="lazy"></button>
+            <button type="button" class="media-item" onclick="openLightbox(this.firstElementChild)"><img src="turnuva_resimler/15-kasim-2026/15-kasim-2026-galeri/3.jpeg" alt="Turnuva fotoğrafı 2" loading="lazy"></button>
+            <button type="button" class="media-item" onclick="openLightbox(this.firstElementChild)"><img src="turnuva_resimler/15-kasim-2026/15-kasim-2026-galeri/4.jpeg" alt="Turnuva fotoğrafı 3" loading="lazy"></button>
+            <button type="button" class="media-item" onclick="openLightbox(this.firstElementChild)"><img src="turnuva_resimler/15-kasim-2026/15-kasim-2026-galeri/5.jpeg" alt="Turnuva fotoğrafı 4" loading="lazy"></button>
+            <button type="button" class="media-item" onclick="openLightbox(this.firstElementChild)"><img src="turnuva_resimler/15-kasim-2026/15-kasim-2026-galeri/6.jpeg" alt="Turnuva fotoğrafı 5" loading="lazy"></button>
+            <button type="button" class="media-item" onclick="openLightbox(this.firstElementChild)"><img src="turnuva_resimler/15-kasim-2026/15-kasim-2026-galeri/7.jpeg" alt="Turnuva fotoğrafı 6" loading="lazy"></button>
+            <div class="media-item"><video src="turnuva_resimler/15-kasim-2026/15-kasim-2026-galeri/1.mp4" controls preload="metadata" playsinline aria-label="Turnuva videosu"></video></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Sniper Espor Merkezi. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        function openLightbox(imgEl) {
+            const lb = document.getElementById('lightbox');
+            document.getElementById('lightbox-img').src = imgEl.src;
+            lb.classList.add('active');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+        document.getElementById('lightbox').addEventListener('click', function(e) { if(e.target === this) closeLightbox(); });
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') closeLightbox(); });
+    </script>
+
+</body>
+</html>
